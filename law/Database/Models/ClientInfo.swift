@@ -33,6 +33,10 @@ import SwiftData
     var address: String
     var clientType: ClientType
     
+    var fullName: String {
+        "\(self.lastName) \(self.firstName) \(self.fatherName ?? "")"
+    }
+    
     init(
         id: String = UUID().uuidString,
         lastName: String,

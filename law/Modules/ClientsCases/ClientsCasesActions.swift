@@ -9,6 +9,8 @@ import Foundation
 
 enum ClientsCasesActions: CaseIterable {
     case clientsCasesDB
+    case casesDB
+    case calendar
 }
 
 extension ClientsCasesActions: ActionsProtocol {
@@ -16,6 +18,10 @@ extension ClientsCasesActions: ActionsProtocol {
         switch self {
             case .clientsCasesDB:
                 "База данных клиентов и история взаимодействия"
+            case .casesDB:
+                "Дела клиентов"
+            case .calendar:
+                "Календарь"
         }
     }
     
@@ -23,6 +29,10 @@ extension ClientsCasesActions: ActionsProtocol {
         switch self {
             case .clientsCasesDB:
                 ClientsCasesDBFactory.create()
+            case .casesDB:
+                CasesDBFactory.create()
+            case .calendar:
+                CalendarFactory.create()
         }
     }
 }

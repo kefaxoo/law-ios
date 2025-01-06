@@ -10,7 +10,7 @@ import Foundation
 protocol SetupProtocol {}
 
 extension SetupProtocol where Self: AnyObject {
-    func setup(_ completion: (Self) throws -> Void) rethrows -> Self {
+    @discardableResult func setup(_ completion: (Self) throws -> Void) rethrows -> Self {
         try completion(self)
         return self
     }

@@ -31,8 +31,8 @@ extension AddClientViewModel {
         guard let lastName = self.checkText(lastName, errorText: "Введите фамилию"),
               let firstName = self.checkText(firstName, errorText: "Введите имя"),
               let phoneNumber = self.checkText(phoneNumber, errorText: "Введите номер телефона"),
-              let email = self.checkText(lastName, errorText: "Введите email"),
-              let address = self.checkText(lastName, errorText: "Введите адрес")
+              let email = self.checkText(email, errorText: "Введите email"),
+              let address = self.checkText(address, errorText: "Введите адрес")
         else { return }
         
         let client = ClientInfo(lastName: lastName, firstName: firstName, fatherName: fatherName, birthDateTimestamp: birthDateTimestamp, phoneNumber: phoneNumber, email: email, address: address, clientType: self.currentClientType)
@@ -46,9 +46,7 @@ extension AddClientViewModel {
 private extension AddClientViewModel {
     func checkText(_ text: String?, errorText: String) -> String? {
         if text?.isEmpty ?? true {
-            let alert = UIAlertController(title: errorText, message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            self.presentAlert.send(alert)
+            self.presentAlert.send(UIAlertController(errorText: errorText))
             return nil
         }
         

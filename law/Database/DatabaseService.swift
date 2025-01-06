@@ -16,7 +16,7 @@ final class DatabaseService {
     
     fileprivate init() {
         do {
-            self.container = try ModelContainer(for: ClientInfo.self)
+            self.container = try ModelContainer(for: ClientInfo.self, ClientCase.self, ClientInteractionHistory.self, CalendarEvent.self)
             guard let container else { return }
             
             self.context = ModelContext(container)
@@ -27,10 +27,19 @@ final class DatabaseService {
     
     func saveObject<T>(_ object: T) where T: PersistentModel {
         self.context?.insert(object)
+        self.saveChanges()
     }
     
-    func fetchObjects<T>(type: T.Type, completionHandler: @escaping((_ objects: [T]?, _ error: Error?) -> Void)) where T: PersistentModel {
-        let descriptor = FetchDescriptor<T>()
+    func saveChanges() {
+        do {
+            try self.context?.save()
+        } catch {
+            debugPrint(error)
+        }
+    }
+    
+    func fetchObjects<T>(type: T.Type, predicate: Predicate<T>? = nil, completionHandler: @escaping((_ objects: [T]?, _ error: Error?) -> Void)) where T: PersistentModel {
+        let descriptor = FetchDescriptor<T>(predicate: predicate)
         guard let context else { return }
         
         do {

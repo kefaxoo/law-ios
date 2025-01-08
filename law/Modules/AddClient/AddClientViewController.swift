@@ -11,27 +11,30 @@ final class AddClientViewController: BaseViewController {
     private lazy var firstNameTextField = UITextField.roundedRect.setup {
         $0.placeholder = "Имя"
         $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 32) })
+        $0.delegate = self
     }
     
     private lazy var lastNameTextField = UITextField.roundedRect.setup {
         $0.placeholder = "Фамилия"
         $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 32) })
+        $0.delegate = self
     }
     
     private lazy var fatherNameTextField = UITextField.roundedRect.setup {
         $0.placeholder = "Отчество"
         $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 32) })
+        $0.delegate = self
     }
     
     private lazy var birthDatePickerView = UIDatePicker().setup {
         $0.datePickerMode = .date
         $0.maximumDate = Date()
-//        $0.addTarget(self, action: #selector(), for: .valueChanged)
     }
     
     private lazy var phoneNumberTextField = UITextField.roundedRect.setup {
         $0.placeholder = "Номер телефона"
         $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 32) })
+        $0.keyboardType = .numberPad
     }
     
     private lazy var emailTextField = UITextField.roundedRect.setup {
@@ -73,6 +76,12 @@ final class AddClientViewController: BaseViewController {
 		super.init()
 	}
     
+    override func setupInterface() {
+        super.setupInterface()
+        
+        self.addKeyboardDismiss()
+    }
+    
     override func setupLayout() {
         self.view.addSubview(self.vStackView)
         self.view.addSubview(self.addClientButton)
@@ -110,5 +119,12 @@ final class AddClientViewController: BaseViewController {
 private extension AddClientViewController {
     @objc func addClientButtonDidTap(_ sender: UIButton) {
         self.viewModel.createClient(lastName: self.lastNameTextField.text, firstName: self.firstNameTextField.text, fatherName: self.fatherNameTextField.text, birthDateTimestamp: self.birthDatePickerView.date.timeIntervalSince1970, phoneNumber: self.phoneNumberTextField.text, email: self.emailTextField.text, address: self.addressTextField.text)
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension AddClientViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        (string.filter(\.isLetter) + string.filter(\.isWhitespace)).count == string.count
     }
 }

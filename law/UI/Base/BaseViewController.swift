@@ -39,4 +39,15 @@ class BaseViewController: UIViewController {
     func setupConstraints() {}
     func setupBindings() {}
     func setupNavigationController() {}
+    
+    func addKeyboardDismiss() {
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewDidTap)))
+    }
+}
+
+// MARK: - Actions
+private extension BaseViewController {
+    @objc func viewDidTap(_ sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+    }
 }

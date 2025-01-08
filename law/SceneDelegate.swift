@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: windowScene)
         self.window?.windowScene = windowScene
-        self.window?.rootViewController = MenuFactory.create()
+        self.window?.rootViewController = LoaderViewController()
         self.window?.makeKeyAndVisible()
     }
 

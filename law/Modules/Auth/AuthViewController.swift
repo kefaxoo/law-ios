@@ -43,6 +43,12 @@ final class AuthViewController: BaseViewController {
 		super.init()
 	}
     
+    override func setupInterface() {
+        super.setupInterface()
+        
+        self.addKeyboardDismiss()
+    }
+    
     override func setupLayout() {
         self.view.addSubview(self.vStackView)
         self.view.addSubview(self.changeModeButton)

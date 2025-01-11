@@ -35,6 +35,9 @@ final class AddEventViewModel: AddEventViewModelProtocol {
         $selectedCase.receive(on: DispatchQueue.main).eraseToAnyPublisher()
     }
     
+    @UserDefaultsWrapper(key: .currentUserId, value: nil)
+    private var currentUserId: String?
+    
     var presentAlert = CPassthroughSubject<UIAlertController>()
     var popVC = CPassthroughSubject<Void>()
 }
@@ -68,6 +71,8 @@ extension AddEventViewModel {
     }
     
     func addButtonDidTap(title: String?, description: String?, location: String?) {
+        guard let currentUserId else { return }
+        
         guard let title,
               !title.isEmpty
         else {
@@ -91,7 +96,17 @@ extension AddEventViewModel {
             return
         }
         
-        let event = CalendarEvent(eventType: self.selectedEventType, name: title, description: description, date: self.date, location: location, clientId: selectedClient.id, caseId: selectedCase.id)
+        let event = CalendarEvent(
+            eventType: self.selectedEventType,
+            name: title,
+            description: description,
+            date: self.date,
+            location: location,
+            clientId: selectedClient.id,
+            caseId: selectedCase.id,
+            laywerId: currentUserId
+        )
+        
         DatabaseService.shared.saveObject(event)
         NotificationCenter.default.post(name: .fetchEvents, object: nil)
         self.popVC.send(())

@@ -15,6 +15,21 @@ import SwiftData
         case letter
         case sms
         case email
+        
+        var title: String {
+            switch self {
+                case .call:
+                    "Звонок"
+                case .meeting:
+                    "Встреча"
+                case .letter:
+                    "Письмо"
+                case .sms:
+                    "СМС"
+                case .email:
+                    "Электронное письмо"
+            }
+        }
     }
     
     @Attribute(.unique) var id: String

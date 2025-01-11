@@ -14,7 +14,7 @@ class ActionsViewController<T>: BaseViewController, UITableViewDataSource, UITab
         $0.delegate = self
     }
     
-    private let viewModel: T
+    let viewModel: T
     
     init(viewModel: T) {
         self.viewModel = viewModel

@@ -14,9 +14,8 @@ final class ClientsCasesDBViewController: BaseViewController {
     }
     
     private lazy var contentTableView = UITableView().setup {
-        $0.register(ClientInfoTableViewCell.self)
+        $0.register(ClientInfoTableViewCell.self, TextTableViewCell.self)
         $0.dataSource = self
-//        $0.delegate = self
     }
     
     private let viewModel: ClientsCasesDBViewModelProtocol
@@ -76,7 +75,12 @@ extension ClientsCasesDBViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.viewModel.cellId, for: indexPath)
         if self.viewModel.selectedSegmentIndex == 0 {
-            (cell as? ClientInfoTableViewCell)?.clientInfo = self.viewModel.tableViewContent[indexPath.row] as? ClientInfo
+            (cell as? ClientInfoTableViewCell)?.setup {
+                $0.clientInfo = self.viewModel.tableViewContent[indexPath.row] as? ClientInfo
+                $0.selectionStyle = .none
+            }
+        } else if self.viewModel.selectedSegmentIndex == 1 {
+            // TODO: -
         }
         
         return cell

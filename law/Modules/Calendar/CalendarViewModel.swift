@@ -20,12 +20,17 @@ final class CalendarViewModel: CalendarViewModelProtocol {
     
     var pushVC = CPassthroughSubject<BaseViewController>()
     
+    @UserDefaultsWrapper(key: .currentUserId, value: nil)
+    private var currentUserId: String?
+    
     init() {
         self.fetchEvents()
     }
     
     func fetchEvents() {
-        DatabaseService.shared.fetchObjects(type: CalendarEvent.self) { [weak self] objects, error in
+        guard let currentUserId else { return }
+        
+        DatabaseService.shared.fetchObjects(type: CalendarEvent.self, predicate: #Predicate { $0.laywerId == currentUserId }) { [weak self] objects, error in
             self?.events = objects ?? []
         }
     }

@@ -9,6 +9,7 @@ import Foundation
 
 enum MenuActions: CaseIterable {
     case clients
+    case docsManagment
 }
 
 extension MenuActions: ActionsProtocol {
@@ -16,6 +17,8 @@ extension MenuActions: ActionsProtocol {
         switch self {
             case .clients:
                 "Управление клиентами и делами"
+            case .docsManagment:
+                "Документооборот"
         }
     }
     
@@ -23,6 +26,8 @@ extension MenuActions: ActionsProtocol {
         switch self {
             case .clients:
                 ClientsCasesFactory.create()
+            case .docsManagment:
+                DocsManagementFactory.create()
         }
     }
 }

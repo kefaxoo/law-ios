@@ -34,6 +34,7 @@ import SwiftData
     var location: String?
     var clientId: String
     var caseId: String
+    var laywerId: String
     
     var calendarScreenText: String {
         """
@@ -50,7 +51,8 @@ import SwiftData
         date: Date,
         location: String?,
         clientId: String,
-        caseId: String
+        caseId: String,
+        laywerId: String
     ) {
         self.id = id
         self.eventType = eventType
@@ -60,5 +62,6 @@ import SwiftData
         self.location = location
         self.clientId = clientId
         self.caseId = caseId
+        self.laywerId = laywerId
     }
 }

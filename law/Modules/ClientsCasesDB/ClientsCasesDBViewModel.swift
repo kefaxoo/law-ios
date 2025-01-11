@@ -18,6 +18,8 @@ final class ClientsCasesDBViewModel: ClientsCasesDBViewModelProtocol {
         switch self.selectedSegmentIndex {
             case 0:
                 ClientInfoTableViewCell.id
+            case 1:
+                TextTableViewCell.id
             default:
                 ""
         }
@@ -35,14 +37,7 @@ final class ClientsCasesDBViewModel: ClientsCasesDBViewModelProtocol {
     
     init() {
         self.fetchClientsInfo()
-        
-        DatabaseService.shared.fetchObjects(type: ClientInteractionHistory.self) { [weak self] objects, error in
-            let objects = objects ?? []
-            self?.cases = objects
-            if self?.selectedSegmentIndex == 1 {
-                self?.tableViewContent = objects
-            }
-        }
+        self.fetchClientInteractionHistory()
     }
 }
 
@@ -71,6 +66,16 @@ extension ClientsCasesDBViewModel {
             let objects = objects ?? []
             self?.clients = objects
             if self?.selectedSegmentIndex == 0 {
+                self?.tableViewContent = objects
+            }
+        }
+    }
+    
+    func fetchClientInteractionHistory() {
+        DatabaseService.shared.fetchObjects(type: ClientInteractionHistory.self) { [weak self] objects, error in
+            let objects = objects ?? []
+            self?.cases = objects
+            if self?.selectedSegmentIndex == 1 {
                 self?.tableViewContent = objects
             }
         }

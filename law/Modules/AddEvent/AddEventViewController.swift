@@ -78,6 +78,12 @@ final class AddEventViewController: BaseViewController {
         super.init()
     }
     
+    override func setupInterface() {
+        super.setupInterface()
+        
+        self.addKeyboardDismiss()
+    }
+    
     override func setupLayout() {
         self.view.addSubview(self.dynamicVScrollView)
         self.view.addSubview(self.addButton)

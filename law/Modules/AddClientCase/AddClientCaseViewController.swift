@@ -31,7 +31,11 @@ final class AddClientCaseViewController: BaseViewController {
         $0.isEnabled = self.viewModel.clientCase == nil
     }
     
-    private lazy var endDateLabel = UILabel().setup({ $0.text = "Дата окончания:" })
+    private lazy var endDateLabel = UILabel().setup {
+        $0.text = "Дата окончания:"
+        $0.isHidden = true
+    }
+    
     private lazy var endDatePickerView = UIDatePicker().setup {
         $0.datePickerMode = .date
         $0.maximumDate = Date()
@@ -39,6 +43,8 @@ final class AddClientCaseViewController: BaseViewController {
         if let endDate = self.viewModel.clientCase?.endDate?.toDate {
             $0.date = endDate
         }
+        
+        $0.isHidden = true
     }
     
     private lazy var eventDatesLabel = UILabel().setup({ $0.text = "События по делу:" })
@@ -79,6 +85,12 @@ final class AddClientCaseViewController: BaseViewController {
 		super.init()
 	}
     
+    override func setupInterface() {
+        super.setupInterface()
+        
+        self.addKeyboardDismiss()
+    }
+    
     override func setupLayout() {
         self.view.addSubview(self.dynamicVStackView)
         self.view.addSubview(self.addCaseButton)
@@ -108,6 +120,8 @@ final class AddClientCaseViewController: BaseViewController {
         
         self.viewModel.selectedCaseStatusPublished.sink { [weak self] status in
             self?.caseStatusButton.setTitle(status.title, for: .normal)
+            self?.endDateLabel.isHidden = status == .active
+            self?.endDatePickerView.isHidden = status == .active
         }.store(in: &cancellables)
         
         self.viewModel.startDatePublished.sink { [weak self] startDate in

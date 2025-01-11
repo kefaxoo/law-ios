@@ -125,6 +125,8 @@ extension AddClientCaseViewModel {
             events[event] = date
         }
         
+        self.endDate = self.selectedStatus == .active ? nil : (self.endDate ?? Date())
+        
         if clientCase != nil {
             self.clientCase?.status = self.selectedStatus
             self.clientCase?.endDate = self.endDate?.timeIntervalSince1970

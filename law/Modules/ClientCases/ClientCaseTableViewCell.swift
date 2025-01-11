@@ -19,6 +19,7 @@ final class ClientCaseTableViewCell: BaseTableViewCell {
         $0.addArrangedSubview(self.caseTypeLabel)
         $0.addArrangedSubview(self.caseStatusLabel)
         $0.addArrangedSubview(self.startDateLabel)
+        $0.addArrangedSubview(self.endDateLabel)
     }
     
     var `case`: ClientCase? {

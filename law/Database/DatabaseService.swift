@@ -14,7 +14,7 @@ final class DatabaseService {
     private var container: ModelContainer?
     private var context: ModelContext?
     
-    fileprivate init() {
+    func initialize() {
         do {
             self.container = try ModelContainer(for: ClientInfo.self, ClientCase.self, ClientInteractionHistory.self, CalendarEvent.self, User.self, ClientDocument.self)
             guard let container else { return }

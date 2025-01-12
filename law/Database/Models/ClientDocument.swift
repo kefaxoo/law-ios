@@ -32,17 +32,28 @@ import SwiftData
     var uploadDate: TimeInterval
     var filePath: String
     
+    var cellText: String {
+        """
+        Название документа: \(self.title)
+        Тип документа: \(self.type.title)
+        """
+    }
+    
+    var isImage: Bool {
+        self.filePath.split(separator: ".").last == "png"
+    }
+    
     init(
         id: String = UUID().uuidString,
         title: String,
         type: DocumentType,
-        uploadDate: TimeInterval,
+        uploadDate: Date,
         filePath: String
     ) {
         self.id = id
         self.title = title
         self.type = type
-        self.uploadDate = uploadDate
+        self.uploadDate = uploadDate.timeIntervalSince1970
         self.filePath = filePath
     }
 }

@@ -8,7 +8,7 @@
 import UIKit
 
 final class AddDocumentFactory {
-	static func create() -> AddDocumentViewController {
-		AddDocumentViewController(viewModel: AddDocumentViewModel())
+    static func create(document: ClientDocument? = nil) -> AddDocumentViewController {
+        AddDocumentViewController(viewModel: AddDocumentViewModel(document: document))
 	}
 }

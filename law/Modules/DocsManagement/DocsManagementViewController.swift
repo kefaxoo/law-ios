@@ -8,7 +8,13 @@
 import UIKit
 
 final class DocsManagementViewController: BaseViewController {
-	private let viewModel: DocsManagementViewModelProtocol
+    private lazy var documentsTableView = UITableView().setup {
+        $0.dataSource = self
+        $0.register(TextTableViewCell.self)
+        $0.delegate = self
+    }
+    
+    private let viewModel: DocsManagementViewModelProtocol
 
 	init(viewModel: DocsManagementViewModelProtocol) {
 		self.viewModel = viewModel
@@ -24,6 +30,26 @@ final class DocsManagementViewController: BaseViewController {
         self.viewModel.pushVC.sink { [weak self] vc in
             self?.navigationController?.pushViewController(vc, animated: true)
         }.store(in: &cancellables)
+        
+        NotificationCenter.default.publisher(for: .fetchDocuments).receive(on: DispatchQueue.main).sink { [weak self] _ in
+            self?.viewModel.fetchDocuments()
+        }.store(in: &cancellables)
+        
+        self.viewModel.documentsPublished.sink { [weak self] _ in
+            self?.documentsTableView.reloadData()
+        }.store(in: &cancellables)
+        
+        self.viewModel.present.sink { [weak self] vc in
+            self?.present(vc, animated: true)
+        }.store(in: &cancellables)
+    }
+    
+    override func setupLayout() {
+        self.view.addSubview(self.documentsTableView)
+    }
+    
+    override func setupConstraints() {
+        self.documentsTableView.snp.makeConstraints({ $0.edges.equalTo(self.view.safeAreaLayoutGuide) })
     }
 }
 
@@ -31,5 +57,33 @@ final class DocsManagementViewController: BaseViewController {
 private extension DocsManagementViewController {
     @objc func rightBarButtonDidTap(_ sender: UIBarButtonItem) {
         self.viewModel.rightBarButtonDidTap()
+    }
+}
+
+// MARK: - UITableViewDataSource
+extension DocsManagementViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        self.viewModel.documents.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: TextTableViewCell.id, for: indexPath)
+        (cell as? TextTableViewCell)?.text = self.viewModel.documents[indexPath.row].cellText
+        return cell
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension DocsManagementViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        self.viewModel.tableViewDidSelect(at: indexPath, delegate: self)
+    }
+}
+
+// MARK: - UIDocumentInteractionControllerDelegate
+extension DocsManagementViewController: UIDocumentInteractionControllerDelegate {
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        self
     }
 }

@@ -40,8 +40,92 @@ final class AddFinanceOperationViewModel: AddFinanceOperationViewModelProtocol {
         $currentPaymentMethod.receive(on: DispatchQueue.main).eraseToAnyPublisher()
     }
     
+    var transactionTypeMenu: UIMenu {
+        UIMenu(
+            options: .displayInline,
+            children: FinanceOperation.TransactionType.allCases.compactMap({ [weak self] type in
+                UIAction(title: type.title) { _ in
+                    self?.currentTransactionType = type
+                }
+            })
+        )
+    }
+    
+    @Published private var currentTransactionType: FinanceOperation.TransactionType
+    var currentTransactionTypePublished: CPublisher<FinanceOperation.TransactionType> {
+        $currentTransactionType.receive(on: DispatchQueue.main).eraseToAnyPublisher()
+    }
+    
+    @Published private var selectedClient: ClientInfo?
+    var selectedClientPublished: CPublisher<ClientInfo?> {
+        $selectedClient.receive(on: DispatchQueue.main).eraseToAnyPublisher()
+    }
+    
+    @Published private var selectedCase: ClientCase?
+    var selectedCasePublished: CPublisher<ClientCase?> {
+        $selectedCase.receive(on: DispatchQueue.main).eraseToAnyPublisher()
+    }
+    
+    var showChooseClientScreen = CPassthroughSubject<Void>()
+    var showChooseCaseScreen = CPassthroughSubject<ClientInfo>()
+    
+    var present = CPassthroughSubject<UIViewController>()
+    var pop = CPassthroughSubject<Void>()
+    
     init() {
+        self.currentTransactionType = .servicePayment
         self.currentStatus = .pending
         self.currentPaymentMethod = .cash
+    }
+}
+
+// MARK: - Actions
+extension AddFinanceOperationViewModel {
+    func clientButtonDidTap() {
+        self.showChooseClientScreen.send(())
+    }
+    
+    func caseButtonDidTap() {
+        guard let selectedClient else {
+            self.present.send(UIAlertController(errorText: "Выберите клиента"))
+            return
+        }
+        
+        self.showChooseCaseScreen.send(selectedClient)
+    }
+    
+    func addOperation(amount: String?) {
+        guard let selectedClient else {
+            self.present.send(UIAlertController(errorText: "Выберите клиента"))
+            return
+        }
+        
+        guard let selectedCase else {
+            self.present.send(UIAlertController(errorText: "Выберите дело"))
+            return
+        }
+        
+        guard let amount = Double(amount ?? ""),
+              amount >= 0
+        else {
+            self.present.send(UIAlertController(errorText: "Введите сумму"))
+            return
+        }
+        
+        let operation = FinanceOperation(clientId: selectedClient.id, caseId: selectedCase.id, amount: amount, transactionType: self.currentTransactionType, status: self.currentStatus, paymentMethod: self.currentPaymentMethod)
+        DatabaseService.shared.saveObject(operation)
+        NotificationCenter.default.post(name: .fetchOperations, object: nil)
+        self.pop.send(())
+    }
+}
+
+// MARK: - Setters
+extension AddFinanceOperationViewModel {
+    func setSelectedClient(_ client: ClientInfo) {
+        self.selectedClient = client
+    }
+    
+    func setSelectedCase(_ case: ClientCase) {
+        self.selectedCase = `case`
     }
 }

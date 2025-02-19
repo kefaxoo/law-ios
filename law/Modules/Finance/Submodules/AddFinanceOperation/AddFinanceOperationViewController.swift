@@ -15,12 +15,14 @@ final class AddFinanceOperationViewController: BaseViewController {
     
     private lazy var clientButton = UIButton(configuration: .tinted()).setup {
         $0.setTitle("Выберите клиента", for: .normal)
+        $0.addTarget(self, action: #selector(clientButtonDidTap), for: .touchUpInside)
     }
     
     private lazy var caseLabel = UILabel().setup { $0.text = "Выберите дело:" }
     
     private lazy var caseButton = UIButton(configuration: .tinted()).setup {
         $0.setTitle("Выберите дело", for: .normal)
+        $0.addTarget(self, action: #selector(caseButtonDidTap), for: .touchUpInside)
     }
     
     private lazy var amountLabel = UILabel().setup { $0.text = "Введите сумму:" }
@@ -28,6 +30,13 @@ final class AddFinanceOperationViewController: BaseViewController {
         $0.placeholder = "Введите сумму..."
         $0.keyboardType = .decimalPad
         $0.delegate = self
+    }
+    
+    private lazy var transactionTypeLabel = UILabel().setup { $0.text = "Выберите тип транзакции:" }
+    
+    private lazy var transactionTypeButton = UIButton(configuration: .tinted()).setup {
+        $0.showsMenuAsPrimaryAction = true
+        $0.menu = self.viewModel.transactionTypeMenu
     }
     
     private lazy var statusLabel = UILabel().setup { $0.text = "Выберите статус операции:" }
@@ -51,6 +60,8 @@ final class AddFinanceOperationViewController: BaseViewController {
         $0.addSubview(self.caseButton, spacingAfter: 16)
         $0.addSubview(self.amountLabel, spacingAfter: 8)
         $0.addSubview(self.amountTextField, spacingAfter: 16)
+        $0.addSubview(self.transactionTypeLabel, spacingAfter: 8)
+        $0.addSubview(self.transactionTypeButton, spacingAfter: 16)
         $0.addSubview(self.statusLabel, spacingAfter: 8)
         $0.addSubview(self.statusButton, spacingAfter: 16)
         $0.addSubview(self.paymentMethodLabel, spacingAfter: 8)
@@ -59,6 +70,7 @@ final class AddFinanceOperationViewController: BaseViewController {
     
     private lazy var bottomButton = UIButton(configuration: .filled()).setup {
         $0.setTitle("Добавить операцию", for: .normal)
+        $0.addTarget(self, action: #selector(addButtonDidTap), for: .touchUpInside)
     }
     
     private let viewModel: AddFinanceOperationViewModelProtocol
@@ -99,6 +111,34 @@ final class AddFinanceOperationViewController: BaseViewController {
         self.viewModel.currentStatusPublished.sink { [weak self] status in
             self?.statusButton.setTitle(status.title, for: .normal)
         }.store(in: &cancellables)
+        
+        self.viewModel.showChooseClientScreen.sink { [weak self] _ in
+            self?.navigationController?.pushViewController(ChooseClientFactory.create(delegate: self), animated: true)
+        }.store(in: &cancellables)
+        
+        self.viewModel.selectedClientPublished.sink { [weak self] client in
+            self?.clientButton.setTitle(client?.fullName ?? "Выберите клиента", for: .normal)
+        }.store(in: &cancellables)
+        
+        self.viewModel.showChooseCaseScreen.sink { [weak self] client in
+            self?.navigationController?.pushViewController(ChooseCaseFactory.create(client: client, delegate: self), animated: true)
+        }.store(in: &cancellables)
+        
+        self.viewModel.selectedCasePublished.sink { [weak self] clientCase in
+            self?.caseButton.setTitle(clientCase?.title ?? "Выберите дело", for: .normal)
+        }.store(in: &cancellables)
+        
+        self.viewModel.present.sink { [weak self] vc in
+            self?.present(vc, animated: true)
+        }.store(in: &cancellables)
+        
+        self.viewModel.currentTransactionTypePublished.sink { [weak self] transactionType in
+            self?.transactionTypeButton.setTitle(transactionType.title, for: .normal)
+        }.store(in: &cancellables)
+        
+        self.viewModel.pop.sink { [weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }.store(in: &cancellables)
     }
 }
 
@@ -108,38 +148,61 @@ extension AddFinanceOperationViewController: UITextFieldDelegate {
         let currentText = textField.text ?? ""
         let decimalSeparator = ","
         
-        // Handling backspace properly
         if string.isEmpty {
-            return true // Allow backspace normally
+            return true
         }
         
-        // Construct the new text
         let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
         
-        // If user types "0" as the first character, auto-insert "0,"
-        if currentText.isEmpty && string == "0" {
+        if currentText.isEmpty,
+           string == "0" {
             textField.text = "0\(decimalSeparator)"
             return false
         }
         
-        if currentText.isEmpty, string == "," {
+        if currentText.isEmpty,
+            string == "," {
             textField.text = "0,"
             return false
         }
         
-        // If the text is "0," and user tries to delete "0", allow full deletion
         if newText == decimalSeparator {
             textField.text = ""
             return false
         }
         
-        // Regex pattern:
-        // - Starts with a non-zero digit or "0,"
-        // - Allows only one decimal separator
-        // - Allows up to two decimal places
         let regexPattern = "^(0\(decimalSeparator)?|[1-9][0-9]*)\(decimalSeparator)?[0-9]{0,2}$"
         let predicate = NSPredicate(format: "SELF MATCHES %@", regexPattern)
         
         return predicate.evaluate(with: newText)
+    }
+}
+
+// MARK: - ChooseClientDelegate
+extension AddFinanceOperationViewController: ChooseClientDelegate {
+    func clientDidChoose(_ client: ClientInfo) {
+        self.viewModel.setSelectedClient(client)
+    }
+}
+
+// MARK: - Actions
+private extension AddFinanceOperationViewController {
+    @objc func clientButtonDidTap(_ sender: UIButton) {
+        self.viewModel.clientButtonDidTap()
+    }
+    
+    @objc func caseButtonDidTap(_ sender: UIButton) {
+        self.viewModel.caseButtonDidTap()
+    }
+    
+    @objc func addButtonDidTap(_ sender: UIButton) {
+        self.viewModel.addOperation(amount: self.amountTextField.text)
+    }
+}
+
+// MARK: - ChooseCaseDelegate
+extension AddFinanceOperationViewController: ChooseCaseDelegate {
+    func caseDidChoose(_ case: ClientCase) {
+        self.viewModel.setSelectedCase(`case`)
     }
 }

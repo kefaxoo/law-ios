@@ -12,4 +12,5 @@ extension NSNotification.Name {
     static let fetchClientCasesInfo = NSNotification.Name("fetchClientCasesInfo")
     static let fetchEvents = NSNotification.Name("fetchEvents")
     static let fetchDocuments = NSNotification.Name("fetchDocuments")
+    static let fetchOperations = NSNotification.Name("fetchOperations")
 }

@@ -41,6 +41,10 @@ final class FinanceOperationsViewController: BaseViewController {
         self.viewModel.pushVC.sink { [weak self] vc in
             self?.navigationController?.pushViewController(vc, animated: true)
         }.store(in: &cancellables)
+        
+        NotificationCenter.default.publisher(for: .fetchOperations).receive(on: DispatchQueue.main).sink { [weak self] _ in
+            self?.viewModel.fetchOperations()
+        }.store(in: &cancellables)
     }
     
     override func setupNavigationController() {

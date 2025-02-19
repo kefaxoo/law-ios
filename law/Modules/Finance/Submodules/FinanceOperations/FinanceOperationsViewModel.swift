@@ -17,6 +17,10 @@ final class FinanceOperationsViewModel: FinanceOperationsViewModelProtocol {
     var pushVC = CPassthroughSubject<BaseViewController>()
     
     init() {
+        self.fetchOperations()
+    }
+    
+    func fetchOperations() {
         DatabaseService.shared.fetchObjects(type: FinanceOperation.self) { [weak self] objects, error in
             self?.operations = objects ?? []
         }

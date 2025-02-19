@@ -16,4 +16,6 @@ protocol FinanceOperationsViewModelProtocol {
     
     func tableViewDidTap(at indexPath: IndexPath)
     func rightBarButtonDidTap()
+    
+    func fetchOperations()
 }

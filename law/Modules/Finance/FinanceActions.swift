@@ -9,7 +9,6 @@ import Foundation
 
 enum FinanceActions: CaseIterable {
     case financeOperations
-    case invoices
     case receivables // задолженность
 }
 
@@ -18,8 +17,6 @@ extension FinanceActions: ActionsProtocol {
         switch self {
             case .financeOperations:
                 "Финансовые операции"
-            case .invoices:
-                "Счета и операции"
             case .receivables:
                 "Дебиторская задолженность"
         }
@@ -30,7 +27,7 @@ extension FinanceActions: ActionsProtocol {
             case .financeOperations:
                 FinanceOperationsFactory.create()
             default:
-                BaseViewController()
+                ReceivablesClientsFactory.create()
         }
     }
 }

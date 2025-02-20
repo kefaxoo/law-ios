@@ -26,6 +26,8 @@ protocol AddFinanceOperationViewModelProtocol {
     var present: CPassthroughSubject<UIViewController> { get }
     var pop: CPassthroughSubject<Void> { get }
     
+    var amountPublished: CPublisher<Double?> { get }
+    
     func clientButtonDidTap()
     func setSelectedClient(_ client: ClientInfo)
     

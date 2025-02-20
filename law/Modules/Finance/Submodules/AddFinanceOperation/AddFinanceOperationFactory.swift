@@ -8,7 +8,7 @@
 import UIKit
 
 final class AddFinanceOperationFactory {
-	static func create() -> AddFinanceOperationViewController {
-		AddFinanceOperationViewController(viewModel: AddFinanceOperationViewModel())
+    static func create(operation: FinanceOperation? = nil) -> AddFinanceOperationViewController {
+        AddFinanceOperationViewController(viewModel: AddFinanceOperationViewModel(operation: operation))
 	}
 }

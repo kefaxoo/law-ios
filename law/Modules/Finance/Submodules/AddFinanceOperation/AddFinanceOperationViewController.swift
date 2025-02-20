@@ -69,12 +69,19 @@ final class AddFinanceOperationViewController: BaseViewController {
     }
     
     private lazy var bottomButton = UIButton(configuration: .filled()).setup {
-        $0.setTitle("Добавить операцию", for: .normal)
+        $0.setTitle("\(self.isAdd ? "Добавить" : "Редактировать") операции", for: .normal)
         $0.addTarget(self, action: #selector(addButtonDidTap), for: .touchUpInside)
     }
     
     private let viewModel: AddFinanceOperationViewModelProtocol
 
+    private var isAdd = true {
+        didSet {
+            self.navigationItem.title = "\(self.isAdd ? "Добавление" : "Редактирование") операции"
+            self.bottomButton.setTitle("\(self.isAdd ? "Добавить" : "Редактировать") операции", for: .normal)
+        }
+    }
+    
 	init(viewModel: AddFinanceOperationViewModelProtocol) {
 		self.viewModel = viewModel
 		super.init()
@@ -100,7 +107,7 @@ final class AddFinanceOperationViewController: BaseViewController {
     }
     
     override func setupNavigationController() {
-        self.navigationItem.title = "Добавление операции"
+        self.navigationItem.title = "\(self.isAdd ? "Добавление" : "Редактирование") операции"
     }
     
     override func setupBindings() {
@@ -139,6 +146,13 @@ final class AddFinanceOperationViewController: BaseViewController {
         self.viewModel.pop.sink { [weak self] _ in
             self?.navigationController?.popViewController(animated: true)
         }.store(in: &cancellables)
+        
+        self.viewModel.amountPublished.sink { [weak self] amount in
+            guard let amount else { return }
+            
+            self?.amountTextField.text = "\(amount)"
+            self?.isAdd = false
+        }.store(in: &cancellables)
     }
 }
 
@@ -146,7 +160,7 @@ final class AddFinanceOperationViewController: BaseViewController {
 extension AddFinanceOperationViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
-        let decimalSeparator = ","
+        let decimalSeparator = "."
         
         if string.isEmpty {
             return true
@@ -162,7 +176,7 @@ extension AddFinanceOperationViewController: UITextFieldDelegate {
         
         if currentText.isEmpty,
             string == "," {
-            textField.text = "0,"
+            textField.text = "0."
             return false
         }
         

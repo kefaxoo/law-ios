@@ -11,6 +11,7 @@ enum MenuActions: CaseIterable {
     case clients
     case docsManagment
     case finance
+    case analytics
 }
 
 extension MenuActions: ActionsProtocol {
@@ -22,6 +23,8 @@ extension MenuActions: ActionsProtocol {
                 "Документооборот"
             case .finance:
                 "Финансовые операции"
+            case .analytics:
+                "Отчетность и аналитика"
         }
     }
     
@@ -33,6 +36,8 @@ extension MenuActions: ActionsProtocol {
                 DocsManagementFactory.create()
             case .finance:
                 FinanceFactory.create()
+            case .analytics:
+                AnalyticsFactory.create()
         }
     }
 }

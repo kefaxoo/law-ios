@@ -92,6 +92,10 @@ class TypeAnalyticsViewController: BaseViewController {
         self.viewModel.selectedEndPeriodPublished.sink { [weak self] selectedEndPeriod in
             self?.endHStackView.textField?.text = selectedEndPeriod?.toDateFormat("dd.MM.yyyy")
         }.store(in: &cancellables)
+        
+        self.viewModel.push.sink { [weak self] vc in
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }.store(in: &cancellables)
     }
 }
 

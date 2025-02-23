@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8336AA4B2D6B2BB700246AC4 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 8336AA4A2D6B2BB700246AC4 /* DGCharts */; };
 		83C687452D0F83CD00CEFCF8 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 83C687442D0F83CD00CEFCF8 /* SnapKit */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8336AA4B2D6B2BB700246AC4 /* DGCharts in Frameworks */,
 				83C687452D0F83CD00CEFCF8 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -47,10 +49,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8336AA492D6B2BB700246AC4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		83C687222D0F839900CEFCF8 = {
 			isa = PBXGroup;
 			children = (
 				83C6872D2D0F839900CEFCF8 /* law */,
+				8336AA492D6B2BB700246AC4 /* Frameworks */,
 				83C6872C2D0F839900CEFCF8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -84,6 +94,7 @@
 			name = law;
 			packageProductDependencies = (
 				83C687442D0F83CD00CEFCF8 /* SnapKit */,
+				8336AA4A2D6B2BB700246AC4 /* DGCharts */,
 			);
 			productName = law;
 			productReference = 83C6872B2D0F839900CEFCF8 /* law.app */;
@@ -368,6 +379,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8336AA4A2D6B2BB700246AC4 /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 830CEABF2D6A4D7C000A8137 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
+		};
 		83C687442D0F83CD00CEFCF8 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 83C687432D0F83CD00CEFCF8 /* XCRemoteSwiftPackageReference "snapkit" */;

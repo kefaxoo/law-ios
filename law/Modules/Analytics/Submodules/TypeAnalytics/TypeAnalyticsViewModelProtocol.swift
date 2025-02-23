@@ -13,6 +13,7 @@ protocol TypeAnalyticsViewModelProtocol {
     var selectedEndPeriodPublished: CPublisher<Date?> { get }
     
     var present: CPassthroughSubject<UIViewController> { get }
+    var push: CPassthroughSubject<BaseViewController> { get }
     
     // MARK: - Actions
     func periodTextFieldDidSelect(isBegin: Bool)

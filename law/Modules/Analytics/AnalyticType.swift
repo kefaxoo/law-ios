@@ -31,8 +31,8 @@ extension AnalyticType: ActionsProtocol {
                 CasesAnalyticsFactory.create()
             case .finance:
                 FinanceAnalyticsFactory.create()
-            default:
-                BaseViewController()
+            case .laywersWorkload:
+                LaywerAnalyticsFactory.create()
         }
     }
 }

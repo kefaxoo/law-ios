@@ -33,10 +33,13 @@ final class FinanceAnalyticsViewModel: FinanceAnalyticsViewModelProtocol {
     }
     
     var present = CPassthroughSubject<UIViewController>()
+    var push = CPassthroughSubject<BaseViewController>()
     
     @UserDefaultsWrapper(key: .currentUserId, value: nil)
     private var currentUserId: String?
     private var currentUser: User?
+    
+    private var operations = [FinanceOperation]()
     
     init() {
         self.fetch()
@@ -61,6 +64,7 @@ private extension FinanceAnalyticsViewModel {
                 objects = objects.filter({ $0.transactionType == selectedTransactionType })
             }
             
+            self.operations = objects
             self.setAnalyticsInfo(by: objects)
         }
     }
@@ -87,7 +91,7 @@ extension FinanceAnalyticsViewModel {
     }
     
     func generationButtonDidTap() {
-        let alert = UIAlertController(title: "Выгрузка отчета", message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Выгрузить в PDF", style: .default, handler: { [weak self] _ in
             guard let self else { return }
             
@@ -104,6 +108,26 @@ extension FinanceAnalyticsViewModel {
             }
             
             self.present.send(PDFViewerViewController(documentData: data))
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Графики и диаграммы", style: .default, handler: { [weak self] _ in
+            alert.dismiss(animated: true)
+            
+            let graphicAlert = UIAlertController(title: "Графики и диаграммы", message: nil, preferredStyle: .actionSheet)
+            
+            graphicAlert.addAction(UIAlertAction(title: "Оплаченные/просроченные счета", style: .default, handler: { _ in
+                guard let self else { return }
+                
+                graphicAlert.dismiss(animated: true)
+                self.push.send(FinanceBillAnalyticsFactory.create(operations: self.operations))
+            }))
+            
+            graphicAlert.addAction(UIAlertAction(title: "Отменить", style: .destructive, handler: { _ in
+                graphicAlert.dismiss(animated: true)
+                self?.present.send(alert)
+            }))
+            
+            self?.present.send(graphicAlert)
         }))
         
         alert.addAction(UIAlertAction(title: "Отмена", style: .destructive, handler: { _ in

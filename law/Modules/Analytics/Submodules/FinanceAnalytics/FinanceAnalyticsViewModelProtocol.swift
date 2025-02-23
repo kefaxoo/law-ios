@@ -17,6 +17,7 @@ protocol FinanceAnalyticsViewModelProtocol {
     var transactionTypeActions: [UIAction] { get }
     
     var present: CPassthroughSubject<UIViewController> { get }
+    var push: CPassthroughSubject<BaseViewController> { get }
     
     func setIsTransactionType(_ value: Bool)
     func generationButtonDidTap()

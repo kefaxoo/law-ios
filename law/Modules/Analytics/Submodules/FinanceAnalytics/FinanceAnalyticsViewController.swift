@@ -107,6 +107,10 @@ final class FinanceAnalyticsViewController: BaseViewController {
         self.viewModel.present.sink { [weak self] vc in
             self?.present(vc, animated: true)
         }.store(in: &cancellables)
+        
+        self.viewModel.push.sink { [weak self] vc in
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }.store(in: &cancellables)
     }
     
     override func setupNavigationController() {

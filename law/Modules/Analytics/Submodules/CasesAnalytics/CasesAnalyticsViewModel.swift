@@ -25,6 +25,7 @@ final class CasesAnalyticsViewModel: TypeAnalyticsViewModelProtocol {
     }
     
     var present = CPassthroughSubject<UIViewController>()
+    var push = CPassthroughSubject<BaseViewController>()
     
     @UserDefaultsWrapper(key: .currentUserId, value: nil)
     private var currentUserId: String?
@@ -106,8 +107,8 @@ extension CasesAnalyticsViewModel {
             }
             
             var predicate: Predicate<ClientCase> = .true
-            if let selectedEndPeriod {
-                predicate = #Predicate { $0.startDate >= selectedStartPeriod.timeIntervalSince1970 && $0.endDate ?? 0 <= selectedEndPeriod.timeIntervalSince1970 }
+            if let selectedEndPeriod = selectedEndPeriod?.timeIntervalSince1970 {
+                predicate = #Predicate { $0.startDate >= selectedStartPeriod.timeIntervalSince1970 && $0.endDate ?? (selectedEndPeriod + 1) <= selectedEndPeriod }
             } else {
                 predicate = #Predicate { $0.startDate >= selectedStartPeriod.timeIntervalSince1970 }
             }
@@ -174,6 +175,31 @@ private extension CasesAnalyticsViewModel {
             }
             
             self?.present.send(PDFViewerViewController(documentData: data))
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Графики и диаграмы", style: .default, handler: { [weak self] _ in
+            alert.dismiss(animated: true)
+            
+            let graphicAnalyticsAlert = UIAlertController(title: "Отчет", message: nil, preferredStyle: .actionSheet)
+            graphicAnalyticsAlert.addAction(UIAlertAction(title: "Доли типов дел", style: .default, handler: { _ in
+                graphicAnalyticsAlert.dismiss(animated: true) {
+                    self?.push.send(CaseTypeAnalyticsFactory.create(cases: cases))
+                }
+            }))
+            
+            graphicAnalyticsAlert.addAction(UIAlertAction(title: "Дела по статусам", style: .default, handler: { _ in
+                graphicAnalyticsAlert.dismiss(animated: true) {
+                    self?.push.send(CaseStatusAnalyticsFactory.create(cases: cases))
+                }
+            }))
+            
+            graphicAnalyticsAlert.addAction(UIAlertAction(title: "Отмена", style: .destructive, handler: { _ in
+                graphicAnalyticsAlert.dismiss(animated: true) {
+                    self?.present.send(alert)
+                }
+            }))
+            
+            self?.present.send(graphicAnalyticsAlert)
         }))
         
         alert.addAction(UIAlertAction(title: "ОК", style: .default, handler: {  _ in

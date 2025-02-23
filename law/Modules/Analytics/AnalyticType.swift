@@ -29,6 +29,8 @@ extension AnalyticType: ActionsProtocol {
         switch self {
             case .cases:
                 CasesAnalyticsFactory.create()
+            case .finance:
+                FinanceAnalyticsFactory.create()
             default:
                 BaseViewController()
         }

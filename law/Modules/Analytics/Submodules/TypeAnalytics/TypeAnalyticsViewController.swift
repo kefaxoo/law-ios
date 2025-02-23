@@ -1,5 +1,5 @@
 //
-//  CasesAnalyticsViewController.swift
+//  TypeAnalyticsViewController.swift
 //  law
 //
 //  Created by Bahdan Piatrouski on 22.02.25.
@@ -13,7 +13,7 @@ fileprivate extension UIStackView {
     }
 }
 
-final class CasesAnalyticsViewController: BaseViewController {
+class TypeAnalyticsViewController: BaseViewController {
     private lazy var togglePeriodLabel = UILabel().setup {
         $0.text = "Фильтр по периоду:"
     }
@@ -44,12 +44,12 @@ final class CasesAnalyticsViewController: BaseViewController {
         $0.addSubview(self.endHStackView, spacingAfter: 16)
     }
     
-    private let viewModel: CasesAnalyticsViewModelProtocol
+    private let viewModel: TypeAnalyticsViewModelProtocol
 
-	init(viewModel: CasesAnalyticsViewModelProtocol) {
-		self.viewModel = viewModel
-		super.init()
-	}
+    init(viewModel: TypeAnalyticsViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init()
+    }
     
     override func setupLayout() {
         self.view.addSubview(self.dynamicVScrollView)
@@ -96,7 +96,7 @@ final class CasesAnalyticsViewController: BaseViewController {
 }
 
 // MARK: - UI
-private extension CasesAnalyticsViewController {
+private extension TypeAnalyticsViewController {
     func createPeriodStackView(isBegin: Bool) -> UIStackView {
         let label = UILabel().setup {
             $0.text = "\(isBegin ? "Начало" : "Конец") периода:"
@@ -118,7 +118,7 @@ private extension CasesAnalyticsViewController {
 }
 
 // MARK: - Actions
-private extension CasesAnalyticsViewController {
+private extension TypeAnalyticsViewController {
     @objc func periodTextFieldDidTap(_ sender: UITextField) {
         self.view.endEditing(true)
         self.viewModel.periodTextFieldDidSelect(isBegin: sender.tag == 1001)

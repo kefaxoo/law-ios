@@ -115,6 +115,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				83C687432D0F83CD00CEFCF8 /* XCRemoteSwiftPackageReference "snapkit" */,
+				830CEABF2D6A4D7C000A8137 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 83C6872C2D0F839900CEFCF8 /* Products */;
@@ -348,6 +349,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		830CEABF2D6A4D7C000A8137 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ChartsOrg/Charts";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
 		83C687432D0F83CD00CEFCF8 /* XCRemoteSwiftPackageReference "snapkit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/snapkit/snapkit";

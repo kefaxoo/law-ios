@@ -8,7 +8,7 @@
 import UIKit
 import SwiftData
 
-final class CasesAnalyticsViewModel: CasesAnalyticsViewModelProtocol {
+final class CasesAnalyticsViewModel: TypeAnalyticsViewModelProtocol {
     @Published private var isPeriod = false
     var isPeriodPublished: CPublisher<Bool> {
         $isPeriod.receive(on: DispatchQueue.main).eraseToAnyPublisher()

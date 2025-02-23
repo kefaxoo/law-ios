@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MessageUI
 
 final class AddEventViewController: BaseViewController {
     private lazy var eventTypeLabel = UILabel().setup { $0.text = "Тип события:" }
@@ -49,9 +50,36 @@ final class AddEventViewController: BaseViewController {
         $0.addTarget(self, action: #selector(caseButtonDidTap), for: .touchUpInside)
     }
     
-    private lazy var addButton = UIButton(configuration: .filled()).setup {
-        $0.setTitle("Добавить событие", for: .normal)
-        $0.addTarget(self, action: #selector(addButtonDidTap), for: .touchUpInside)
+    private lazy var toggleReminderLabel = UILabel().setup {
+        $0.text = "Добавить напоминание?"
+    }
+    
+    private lazy var toggleReminderSwitch = UISwitch().setup {
+        $0.addTarget(self, action: #selector(toggleReminderSwitchValueChanged), for: .valueChanged)
+    }
+    
+    private lazy var toggleReminderHStackView = UIStackView().setup {
+        $0.axis = .horizontal
+        $0.addArrangedSubview(self.toggleReminderLabel)
+        $0.addArrangedSubview(.spacer)
+        $0.addArrangedSubview(self.toggleReminderSwitch)
+    }
+    
+    private lazy var setupReminderLabel = UILabel().setup {
+        $0.text = "Напомнить за"
+    }
+    
+    private lazy var setupReminderButton = UIButton(configuration: .tinted()).setup {
+        $0.showsMenuAsPrimaryAction = true
+        $0.menu = UIMenu(options: .displayInline, children: self.viewModel.remindersActions)
+    }
+    
+    private lazy var setupReminderHStackView = UIStackView().setup {
+        $0.axis = .horizontal
+        $0.addArrangedSubview(self.setupReminderLabel)
+        $0.addArrangedSubview(.spacer)
+        $0.addArrangedSubview(self.setupReminderButton)
+        $0.isHidden = true
     }
     
     private lazy var dynamicVScrollView = DynamicScrollView(axis: .vertical).setup {
@@ -69,6 +97,13 @@ final class AddEventViewController: BaseViewController {
         $0.addSubview(self.clientButton, spacingAfter: 16)
         $0.addSubview(self.caseLabel, spacingAfter: 16)
         $0.addSubview(self.caseButton, spacingAfter: 16)
+        $0.addSubview(self.toggleReminderHStackView, spacingAfter: 16)
+        $0.addSubview(self.setupReminderHStackView, spacingAfter: 16)
+    }
+    
+    private lazy var addButton = UIButton(configuration: .filled()).setup {
+        $0.setTitle("Добавить событие", for: .normal)
+        $0.addTarget(self, action: #selector(addButtonDidTap), for: .touchUpInside)
     }
     
     private let viewModel: AddEventViewModelProtocol
@@ -120,7 +155,7 @@ final class AddEventViewController: BaseViewController {
             self?.caseButton.setTitle(`case`?.title ?? "Выберите дело, связанное с событием", for: .normal)
         }.store(in: &cancellables)
         
-        self.viewModel.presentAlert.sink { [weak self] alert in
+        self.viewModel.present.sink { [weak self] alert in
             self?.present(alert, animated: true)
         }.store(in: &cancellables)
         
@@ -154,8 +189,26 @@ final class AddEventViewController: BaseViewController {
             self?.clientButton.isEnabled = false
             self?.caseButton.isEnabled = false
             
-            self?.addButton.alpha = 0
-            self?.addButton.isEnabled = false
+            self?.addButton.setTitle("Отправить напоминание клиенту?", for: .normal)
+            
+            self?.setupReminderHStackView.isHidden = true
+            self?.toggleReminderHStackView.isHidden = true
+        }.store(in: &cancellables)
+        
+        self.viewModel.isReminderPublished.sink { [weak self] isReminder in
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
+                self?.setupReminderHStackView.isHidden = !isReminder
+                self?.dynamicVScrollView.layoutIfNeeded()
+            }
+        }.store(in: &cancellables)
+        
+        self.viewModel.selectedReminderPeriodPublished.sink { [weak self] period in
+            self?.setupReminderButton.setTitle(period?.title, for: .normal)
+        }.store(in: &cancellables)
+        
+        self.viewModel.presentMailVC.sink { [weak self] vc in
+            vc.delegate = self
+            self?.present(vc, animated: true)
         }.store(in: &cancellables)
     }
 }
@@ -177,6 +230,10 @@ private extension AddEventViewController {
     @objc func addButtonDidTap(_ sender: UIButton) {
         self.viewModel.addButtonDidTap(title: self.nameTextField.text, description: self.descriptionTextField.text, location: self.locationTextField.text)
     }
+    
+    @objc func toggleReminderSwitchValueChanged(_ sender: UISwitch) {
+        self.viewModel.setIsReminder(sender.isOn)
+    }
 }
 
 // MARK: - ChooseClientDelegate
@@ -190,5 +247,12 @@ extension AddEventViewController: ChooseClientDelegate {
 extension AddEventViewController: ChooseCaseDelegate {
     func caseDidChoose(_ case: ClientCase) {
         self.viewModel.setSelectedCase(`case`)
+    }
+}
+
+// MARK: - MFMailComposeViewControllerDelegate
+extension AddEventViewController: MFMailComposeViewControllerDelegate, UINavigationControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: (any Error)?) {
+        
     }
 }

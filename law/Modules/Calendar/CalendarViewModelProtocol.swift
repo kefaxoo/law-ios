@@ -15,8 +15,11 @@ protocol CalendarViewModelProtocol {
     var eventsToShowPublished: CPublisher<[CalendarEvent]> { get }
     
     var pushVC: CPassthroughSubject<BaseViewController> { get }
+    var present: CPassthroughSubject<BaseViewController> { get }
     
     func rightBarButtonDidTap()
     func fetchEvents()
     func dateDidSelect(dateComponents: DateComponents?)
+    
+    func eventDidTap(at indexPath: IndexPath)
 }

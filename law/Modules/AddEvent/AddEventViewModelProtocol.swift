@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MessageUI
 
 protocol AddEventViewModelProtocol {
     var eventTypeActions: [UIAction] { get }
@@ -16,11 +17,16 @@ protocol AddEventViewModelProtocol {
     var selectedClientPublished: CPublisher<ClientInfo?> { get }
     var selectedCasePublished: CPublisher<ClientCase?> { get }
     
-    var presentAlert: CPassthroughSubject<UIAlertController> { get }
+    var present: CPassthroughSubject<UIViewController> { get }
+    var presentMailVC: CPassthroughSubject<MFMailComposeViewController> { get }
     
     var popVC: CPassthroughSubject<Void> { get }
     
     var eventToShowPublished: CPublisher<CalendarEvent?> { get }
+    
+    var isReminderPublished: CPublisher<Bool> { get }
+    var selectedReminderPeriodPublished: CPublisher<ReminderPeriod?> { get }
+    var remindersActions: [UIAction] { get }
     
     func setDate(_ date: Date)
     
@@ -31,4 +37,6 @@ protocol AddEventViewModelProtocol {
     func setSelectedCase(_ case: ClientCase)
     
     func addButtonDidTap(title: String?, description: String?, location: String?)
+    
+    func setIsReminder(_ value: Bool)
 }

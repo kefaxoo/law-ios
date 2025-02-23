@@ -8,6 +8,18 @@
 import Foundation
 import UserNotifications
 
+fileprivate extension UNCalendarNotificationTrigger {
+    convenience init?(event: CalendarEvent, period: ReminderPeriod) {
+        let date = Date(timeIntervalSince1970: event.date)
+        let triggerDate = date.addingTimeInterval(-period.timeInterval)
+        
+        guard triggerDate > Date() else { return nil }
+        
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: triggerDate)
+        self.init(dateMatching: dateComponents, repeats: false)
+    }
+}
+
 final class PushNotificationService {
     @UserDefaultsWrapper(key: .hasNotificationAccess, value: false)
     private static var hasNotifictionAccess: Bool
@@ -19,7 +31,7 @@ final class PushNotificationService {
         }
     }
     
-    static func addCalendarEvenetReminder(_ event: CalendarEvent) {
+    static func addCalendarEvenetReminder(_ event: CalendarEvent, reminderPeriod: ReminderPeriod) {
         let content = UNMutableNotificationContent()
         content.title = event.name
         let date = Date(timeIntervalSince1970: event.date).toDateFormat("dd.MM.yyyy HH:mm")
@@ -38,7 +50,8 @@ final class PushNotificationService {
         
         content.sound = .default
         
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        guard let trigger = UNCalendarNotificationTrigger(event: event, period: reminderPeriod) else { return }
+        
         let request = UNNotificationRequest(identifier: "event-\(event.id)", content: content, trigger: trigger)
         
         UNUserNotificationCenter.current().add(request) { error in

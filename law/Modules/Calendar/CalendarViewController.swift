@@ -24,6 +24,7 @@ final class CalendarViewController: BaseViewController {
     private lazy var eventsTableView = UITableView().setup {
         $0.dataSource = self
         $0.register(TextTableViewCell.self)
+        $0.delegate = self
     }
     
     private let viewModel: CalendarViewModelProtocol
@@ -76,6 +77,10 @@ final class CalendarViewController: BaseViewController {
         self.viewModel.eventsToShowPublished.sink { [weak self] _ in
             self?.eventsTableView.reloadData()
         }.store(in: &cancellables)
+        
+        self.viewModel.present.sink { [weak self] vc in
+            self?.present(vc, animated: true)
+        }.store(in: &cancellables)
     }
 }
 
@@ -112,5 +117,13 @@ extension CalendarViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: TextTableViewCell.id, for: indexPath)
         (cell as? TextTableViewCell)?.text = self.viewModel.eventsToShow[indexPath.row].calendarScreenText
         return cell
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension CalendarViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        self.viewModel.eventDidTap(at: indexPath)
     }
 }

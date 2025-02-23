@@ -19,6 +19,7 @@ final class CalendarViewModel: CalendarViewModelProtocol {
     }
     
     var pushVC = CPassthroughSubject<BaseViewController>()
+    var present = CPassthroughSubject<BaseViewController>()
     
     @UserDefaultsWrapper(key: .currentUserId, value: nil)
     private var currentUserId: String?
@@ -48,5 +49,10 @@ extension CalendarViewModel {
         guard let dateComponents else { return }
         
         self.eventsToShow = self.events.filter({ $0.date == dateComponents })
+    }
+    
+    func eventDidTap(at indexPath: IndexPath) {
+        let event = self.events[indexPath.row]
+        self.present.send(AddEventFactory.create(eventToShow: event))
     }
 }

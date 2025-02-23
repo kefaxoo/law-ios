@@ -90,10 +90,7 @@ final class AddEventViewController: BaseViewController {
     }
     
     override func setupConstraints() {
-        self.dynamicVScrollView.snp.makeConstraints { make in
-            make.horizontalEdges.equalToSuperview().inset(16)
-            make.top.equalTo(self.view.safeAreaLayoutGuide)
-        }
+        self.dynamicVScrollView.snp.makeConstraints({ $0.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide).inset(16) })
         
         self.addButton.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview().inset(16)
@@ -129,6 +126,36 @@ final class AddEventViewController: BaseViewController {
         
         self.viewModel.popVC.sink { [weak self] _ in
             self?.navigationController?.popViewController(animated: true)
+        }.store(in: &cancellables)
+        
+        self.viewModel.eventToShowPublished.sink { [weak self] eventToShow in
+            guard let eventToShow else { return }
+            
+            self?.eventTypeButton.setTitle(eventToShow.eventType.title, for: .normal)
+            self?.nameTextField.text = eventToShow.name
+            self?.descriptionTextField.text = eventToShow.eventDescription ?? " "
+            self?.datePickerView.date = Date(timeIntervalSince1970: eventToShow.date)
+            self?.locationTextField.text = eventToShow.location ?? " "
+            let clientId = eventToShow.clientId
+            DatabaseService.shared.fetchObjects(type: ClientInfo.self, predicate: #Predicate { $0.id == clientId }) { objects, error in
+                self?.clientButton.setTitle(objects?.first?.fullName, for: .normal)
+            }
+            
+            let caseId = eventToShow.caseId
+            DatabaseService.shared.fetchObjects(type: ClientCase.self, predicate: #Predicate { $0.id == caseId }) { objects, error in
+                self?.caseButton.setTitle(objects?.first?.title, for: .normal)
+            }
+            
+            self?.eventTypeButton.isEnabled = false
+            self?.nameTextField.isEnabled = false
+            self?.descriptionTextField.isEnabled = false
+            self?.datePickerView.isEnabled = false
+            self?.locationTextField.isEnabled = false
+            self?.clientButton.isEnabled = false
+            self?.caseButton.isEnabled = false
+            
+            self?.addButton.alpha = 0
+            self?.addButton.isEnabled = false
         }.store(in: &cancellables)
     }
 }

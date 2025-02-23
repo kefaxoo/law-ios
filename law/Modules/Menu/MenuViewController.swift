@@ -8,6 +8,12 @@
 import UIKit
 
 final class MenuViewController: ActionsViewController<MenuViewModel> {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.viewModel.viewDidLoad()
+    }
+    
     override func setupNavigationController() {
         self.navigationItem.title = "Menu"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Выйти", style: .done, target: self, action: #selector(rightBarButtonDidTap))

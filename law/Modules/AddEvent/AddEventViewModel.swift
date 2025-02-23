@@ -40,6 +40,15 @@ final class AddEventViewModel: AddEventViewModelProtocol {
     
     var presentAlert = CPassthroughSubject<UIAlertController>()
     var popVC = CPassthroughSubject<Void>()
+    
+    @Published private var eventToShow: CalendarEvent?
+    var eventToShowPublished: CPublisher<CalendarEvent?> {
+        $eventToShow.receive(on: DispatchQueue.main).eraseToAnyPublisher()
+    }
+    
+    init(eventToShow event: CalendarEvent?) {
+        self.eventToShow = event
+    }
 }
 
 // MARK: - Actions
@@ -108,6 +117,7 @@ extension AddEventViewModel {
         )
         
         DatabaseService.shared.saveObject(event)
+        PushNotificationService.addCalendarEvenetReminder(event)
         NotificationCenter.default.post(name: .fetchEvents, object: nil)
         self.popVC.send(())
     }

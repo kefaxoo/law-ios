@@ -20,6 +20,8 @@ protocol AddEventViewModelProtocol {
     
     var popVC: CPassthroughSubject<Void> { get }
     
+    var eventToShowPublished: CPublisher<CalendarEvent?> { get }
+    
     func setDate(_ date: Date)
     
     func clientButtonDidTap(delegate: ChooseClientDelegate?)

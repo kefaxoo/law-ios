@@ -8,7 +8,7 @@
 import UIKit
 
 final class AddEventFactory {
-	static func create() -> AddEventViewController {
-		AddEventViewController(viewModel: AddEventViewModel())
+    static func create(eventToShow event: CalendarEvent? = nil) -> AddEventViewController {
+        AddEventViewController(viewModel: AddEventViewModel(eventToShow: event))
 	}
 }

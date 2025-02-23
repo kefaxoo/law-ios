@@ -37,3 +37,10 @@ extension MenuViewModel {
         self.presentAlert.send(alert)
     }
 }
+
+// MARK: - Lifecycle
+extension MenuViewModel {
+    func viewDidLoad() {
+        PushNotificationService.requestAccess()
+    }
+}

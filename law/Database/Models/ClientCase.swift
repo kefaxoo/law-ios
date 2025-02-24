@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-@Model final class ClientCase {
+@Model final class ClientCase: Decodable {
     typealias EventDates = [String: Date]
     
     enum CaseType: Codable, CaseIterable {
@@ -53,6 +53,15 @@ import SwiftData
     var endDate: TimeInterval?
     var eventDates: EventDates?
     
+    enum CodingKeys: CodingKey {
+        case clientId
+        case type
+        case status
+        case startDate
+        case endDate
+        case eventDates
+    }
+    
     var title: String {
         "\(self.type.title)\nДата начала: \(self.startDate.toDate(withFormat: "dd.MM.yyyy"))"
     }
@@ -73,5 +82,36 @@ import SwiftData
         self.startDate = startDate.timeIntervalSince1970
         self.endDate = endDate?.timeIntervalSince1970
         self.eventDates = eventDates
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.id = UUID().uuidString
+        self.clientId = try container.decode(String.self, forKey: .clientId)
+        
+        let type = try container.decode(String.self, forKey: .type)
+        self.type = switch type {
+            case "civil":
+                .civil
+            case "administrative":
+                .administrative
+            default:
+                .criminal
+        }
+        
+        let status = try container.decode(String.self, forKey: .status)
+        self.status = switch status {
+            case "closed":
+                .closed
+            case "archived":
+                .archived
+            default:
+                .active
+        }
+        
+        self.startDate = try container.decode(TimeInterval.self, forKey: .startDate)
+        self.endDate = try container.decodeIfPresent(TimeInterval.self, forKey: .endDate)
+        self.eventDates = [:]
     }
 }

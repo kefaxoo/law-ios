@@ -1,0 +1,65 @@
+[
+    {
+      "clientId": "0",
+      "type": "criminal",
+      "status": "active",
+      "startDate": 1704067200,
+      "endDate": null
+    },
+    {
+      "clientId": "0",
+      "type": "civil",
+      "status": "closed",
+      "startDate": 1680393600,
+      "endDate": 1696118400
+    },
+    {
+      "clientId": "1",
+      "type": "administrative",
+      "status": "active",
+      "startDate": 1711929600,
+      "endDate": null
+    },
+    {
+      "clientId": "1",
+      "type": "civil",
+      "status": "archived",
+      "startDate": 1651363200,
+      "endDate": 1669852800
+    },
+    {
+      "clientId": "2",
+      "type": "civil",
+      "status": "active",
+      "startDate": 1720396800,
+      "endDate": null
+    },
+    {
+      "clientId": "3",
+      "type": "criminal",
+      "status": "closed",
+      "startDate": 1672531200,
+      "endDate": 1690848000
+    },
+    {
+      "clientId": "3",
+      "type": "administrative",
+      "status": "archived",
+      "startDate": 1648771200,
+      "endDate": 1661990400
+    },
+    {
+      "clientId": "4",
+      "type": "civil",
+      "status": "active",
+      "startDate": 1735689600,
+      "endDate": null
+    },
+    {
+      "clientId": "4",
+      "type": "criminal",
+      "status": "closed",
+      "startDate": 1664668800,
+      "endDate": 1685577600
+    }
+  ]

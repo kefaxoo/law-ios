@@ -1,0 +1,146 @@
+[
+    {
+      "clientId": "0",
+      "caseId": "0",
+      "amount": -1020.67,
+      "transactionType": "refund",
+      "status": "done",
+      "paymentMethod": "bankTransfer"
+    },
+    {
+      "clientId": "0",
+      "caseId": "0",
+      "amount": 1418.65,
+      "transactionType": "legalFees",
+      "status": "canceled",
+      "paymentMethod": "bankTransfer"
+    },
+    {
+      "clientId": "0",
+      "caseId": "1",
+      "amount": 1233.53,
+      "transactionType": "legalFees",
+      "status": "canceled",
+      "paymentMethod": "cash"
+    },
+    {
+      "clientId": "1",
+      "caseId": "2",
+      "amount": 2453.62,
+      "transactionType": "servicePayment",
+      "status": "done",
+      "paymentMethod": "card"
+    },
+    {
+      "clientId": "1",
+      "caseId": "2",
+      "amount": -186.4,
+      "transactionType": "refund",
+      "status": "pending",
+      "paymentMethod": "bankTransfer"
+    },
+    {
+      "clientId": "1",
+      "caseId": "3",
+      "amount": -978.27,
+      "transactionType": "refund",
+      "status": "pending",
+      "paymentMethod": "bankTransfer"
+    },
+    {
+      "clientId": "1",
+      "caseId": "3",
+      "amount": 1172.76,
+      "transactionType": "legalFees",
+      "status": "canceled",
+      "paymentMethod": "card"
+    },
+    {
+      "clientId": "2",
+      "caseId": "4",
+      "amount": 1558.22,
+      "transactionType": "legalFees",
+      "status": "done",
+      "paymentMethod": "card"
+    },
+    {
+      "clientId": "2",
+      "caseId": "4",
+      "amount": 2840.49,
+      "transactionType": "servicePayment",
+      "status": "done",
+      "paymentMethod": "card"
+    },
+    {
+      "clientId": "2",
+      "caseId": "5",
+      "amount": 1292.64,
+      "transactionType": "legalFees",
+      "status": "canceled",
+      "paymentMethod": "card"
+    },
+    {
+      "clientId": "2",
+      "caseId": "5",
+      "amount": 4487.6,
+      "transactionType": "servicePayment",
+      "status": "done",
+      "paymentMethod": "card"
+    },
+    {
+      "clientId": "3",
+      "caseId": "6",
+      "amount": 530.88,
+      "transactionType": "servicePayment",
+      "status": "pending",
+      "paymentMethod": "cash"
+    },
+    {
+      "clientId": "3",
+      "caseId": "7",
+      "amount": 2110.36,
+      "transactionType": "servicePayment",
+      "status": "pending",
+      "paymentMethod": "card"
+    },
+    {
+      "clientId": "3",
+      "caseId": "7",
+      "amount": 1079.7,
+      "transactionType": "legalFees",
+      "status": "done",
+      "paymentMethod": "card"
+    },
+    {
+      "clientId": "4",
+      "caseId": "8",
+      "amount": 1149.61,
+      "transactionType": "legalFees",
+      "status": "pending",
+      "paymentMethod": "cash"
+    },
+    {
+      "clientId": "4",
+      "caseId": "8",
+      "amount": -1318.18,
+      "transactionType": "refund",
+      "status": "done",
+      "paymentMethod": "cash"
+    },
+    {
+      "clientId": "4",
+      "caseId": "9",
+      "amount": 322.72,
+      "transactionType": "servicePayment",
+      "status": "canceled",
+      "paymentMethod": "card"
+    },
+    {
+      "clientId": "4",
+      "caseId": "9",
+      "amount": -401.66,
+      "transactionType": "refund",
+      "status": "done",
+      "paymentMethod": "bankTransfer"
+    }
+  ]

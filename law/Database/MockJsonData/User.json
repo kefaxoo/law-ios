@@ -1,0 +1,22 @@
+[
+    {
+      "login": "advokat_ivanov",
+      "password": "SecurePass123!"
+    },
+    {
+      "login": "legalexpert_petrov",
+      "password": "Lawyer2024#"
+    },
+    {
+      "login": "justice_smirnova",
+      "password": "Advokat$$99"
+    },
+    {
+      "login": "beljurist_kuznetsov",
+      "password": "LegalPower77!"
+    },
+    {
+      "login": "defender_alexeeva",
+      "password": "CaseClosed2025!"
+    }
+  ]

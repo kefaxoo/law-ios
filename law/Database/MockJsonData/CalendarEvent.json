@@ -1,0 +1,182 @@
+[
+    {
+      "eventType": "courtSession",
+      "name": "Судебное заседание",
+      "eventDescription": "Судебное заседание по делу клиента 0",
+      "date": 1741219200,
+      "location": "Зал 2, г. Минск",
+      "clientId": "0",
+      "caseId": "0",
+      "laywerId": "2"
+    },
+    {
+      "eventType": "deadlineSubmissionDocuments",
+      "name": "Срок подачи документов",
+      "eventDescription": "Срок подачи документов по делу клиента 0",
+      "date": 1737590400,
+      "location": "Офис адвоката",
+      "clientId": "0",
+      "caseId": "0",
+      "laywerId": "2"
+    },
+    {
+      "eventType": "deadlineSubmissionDocuments",
+      "name": "Срок подачи документов",
+      "eventDescription": "Срок подачи документов по делу клиента 0",
+      "date": 1743120000,
+      "location": "Офис адвоката",
+      "clientId": "0",
+      "caseId": "1",
+      "laywerId": "4"
+    },
+    {
+      "eventType": "courtSession",
+      "name": "Судебное заседание",
+      "eventDescription": "Судебное заседание по делу клиента 1",
+      "date": 1743120000,
+      "location": "Зал 5, г. Минск",
+      "clientId": "1",
+      "caseId": "2",
+      "laywerId": "3"
+    },
+    {
+      "eventType": "meeting",
+      "name": "Встреча с клиентом",
+      "eventDescription": "Встреча с клиентом по делу клиента 1",
+      "date": 1737072000,
+      "location": "Офис адвоката",
+      "clientId": "1",
+      "caseId": "2",
+      "laywerId": "3"
+    },
+    {
+      "eventType": "courtSession",
+      "name": "Судебное заседание",
+      "eventDescription": "Судебное заседание по делу клиента 1",
+      "date": 1738281600,
+      "location": "Зал 4, г. Минск",
+      "clientId": "1",
+      "caseId": "3",
+      "laywerId": "0"
+    },
+    {
+      "eventType": "courtSession",
+      "name": "Судебное заседание",
+      "eventDescription": "Судебное заседание по делу клиента 1",
+      "date": 1740873600,
+      "location": "Зал 5, г. Минск",
+      "clientId": "1",
+      "caseId": "3",
+      "laywerId": "0"
+    },
+    {
+      "eventType": "courtSession",
+      "name": "Судебное заседание",
+      "eventDescription": "Судебное заседание по делу клиента 2",
+      "date": 1740873600,
+      "location": "Зал 3, г. Минск",
+      "clientId": "2",
+      "caseId": "4",
+      "laywerId": "1"
+    },
+    {
+      "eventType": "meeting",
+      "name": "Встреча с клиентом",
+      "eventDescription": "Встреча с клиентом по делу клиента 2",
+      "date": 1739577600,
+      "location": "Офис адвоката",
+      "clientId": "2",
+      "caseId": "4",
+      "laywerId": "1"
+    },
+    {
+      "eventType": "courtSession",
+      "name": "Судебное заседание",
+      "eventDescription": "Судебное заседание по делу клиента 2",
+      "date": 1742256000,
+      "location": "Зал 4, г. Минск",
+      "clientId": "2",
+      "caseId": "5",
+      "laywerId": "3"
+    },
+    {
+      "eventType": "deadlineSubmissionDocuments",
+      "name": "Срок подачи документов",
+      "eventDescription": "Срок подачи документов по делу клиента 2",
+      "date": 1745366400,
+      "location": "Офис адвоката",
+      "clientId": "2",
+      "caseId": "5",
+      "laywerId": "3"
+    },
+    {
+      "eventType": "deadlineSubmissionDocuments",
+      "name": "Срок подачи документов",
+      "eventDescription": "Срок подачи документов по делу клиента 3",
+      "date": 1738281600,
+      "location": "Офис адвоката",
+      "clientId": "3",
+      "caseId": "6",
+      "laywerId": "4"
+    },
+    {
+      "eventType": "courtSession",
+      "name": "Судебное заседание",
+      "eventDescription": "Судебное заседание по делу клиента 3",
+      "date": 1740873600,
+      "location": "Зал 5, г. Минск",
+      "clientId": "3",
+      "caseId": "7",
+      "laywerId": "3"
+    },
+    {
+      "eventType": "courtSession",
+      "name": "Судебное заседание",
+      "eventDescription": "Судебное заседание по делу клиента 3",
+      "date": 1738454400,
+      "location": "Зал 1, г. Минск",
+      "clientId": "3",
+      "caseId": "7",
+      "laywerId": "3"
+    },
+    {
+      "eventType": "deadlineSubmissionDocuments",
+      "name": "Срок подачи документов",
+      "eventDescription": "Срок подачи документов по делу клиента 4",
+      "date": 1739664000,
+      "location": "Офис адвоката",
+      "clientId": "4",
+      "caseId": "8",
+      "laywerId": "0"
+    },
+    {
+      "eventType": "meeting",
+      "name": "Встреча с клиентом",
+      "eventDescription": "Встреча с клиентом по делу клиента 4",
+      "date": 1742169600,
+      "location": "Офис адвоката",
+      "clientId": "4",
+      "caseId": "8",
+      "laywerId": "0"
+    },
+    {
+      "eventType": "deadlineSubmissionDocuments",
+      "name": "Срок подачи документов",
+      "eventDescription": "Срок подачи документов по делу клиента 4",
+      "date": 1739491200,
+      "location": "Офис адвоката",
+      "clientId": "4",
+      "caseId": "9",
+      "laywerId": "4"
+    },
+    {
+      "eventType": "courtSession",
+      "name": "Судебное заседание",
+      "eventDescription": "Судебное заседание по делу клиента 4",
+      "date": 1743552000,
+      "location": "Зал 4, г. Минск",
+      "clientId": "4",
+      "caseId": "9",
+      "laywerId": "4"
+    }
+  ]

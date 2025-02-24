@@ -15,7 +15,7 @@ final class CalendarViewController: BaseViewController {
         selectionBehavior.setSelected(calendar.dateComponents([.year, .month, .day], from: Date()), animated: false)
         $0.selectionBehavior = selectionBehavior
         $0.delegate = self
-        if let currentDate = Date.currentDate,
+        if let currentDate = Date.currentDate?.addingTimeInterval(-90 * 86400),
            let maxDate = Date.max {
             $0.availableDateRange = DateInterval(start: currentDate, end: maxDate)
         }

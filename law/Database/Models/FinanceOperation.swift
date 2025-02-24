@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-@Model final class FinanceOperation {
+@Model final class FinanceOperation: Decodable {
     enum TransactionType: Codable, CaseIterable {
         case servicePayment // оплата услуг
         case legalFees // судебные издержки
@@ -68,6 +68,15 @@ import SwiftData
     var status: Status
     var paymentMethod: PaymentMethod
     
+    enum CodingKeys: CodingKey {
+        case clientId
+        case caseId
+        case amount
+        case transactionType
+        case status
+        case paymentMethod
+    }
+    
     init(
         id: String = UUID().uuidString,
         clientId: String,
@@ -84,5 +93,44 @@ import SwiftData
         self.transactionType = transactionType
         self.status = status
         self.paymentMethod = paymentMethod
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.id = UUID().uuidString
+        self.clientId = try container.decode(String.self, forKey: .clientId)
+        self.caseId = try container.decode(String.self, forKey: .caseId)
+        self.amount = try container.decode(Double.self, forKey: .amount)
+        
+        let transactionType = try container.decode(String.self, forKey: .transactionType)
+        self.transactionType = switch transactionType {
+            case "legalFees":
+                .legalFees
+            case "refund":
+                .refund
+            default:
+                .servicePayment
+        }
+        
+        let status = try container.decode(String.self, forKey: .status)
+        self.status = switch status {
+            case "pending":
+                .pending
+            case "cancelled":
+                .canceled
+            default:
+                .done
+        }
+        
+        let paymentMethod = try container.decode(String.self, forKey: .paymentMethod)
+        self.paymentMethod = switch paymentMethod {
+            case "card":
+                .card
+            case "bankTransfer":
+                .bankTransfer
+            default:
+                .cash
+        }
     }
 }

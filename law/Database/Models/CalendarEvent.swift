@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-@Model final class CalendarEvent {
+@Model final class CalendarEvent: Decodable {
     enum EventType: Codable, CaseIterable {
         case meeting // встреча
         case courtSession // судебное заседание
@@ -35,6 +35,17 @@ import SwiftData
     var clientId: String
     var caseId: String
     var laywerId: String
+    
+    enum CodingKeys: CodingKey {
+        case eventType
+        case name
+        case eventDescription
+        case date
+        case location
+        case clientId
+        case caseId
+        case laywerId
+    }
     
     var calendarScreenText: String {
         """
@@ -63,5 +74,30 @@ import SwiftData
         self.clientId = clientId
         self.caseId = caseId
         self.laywerId = laywerId
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.id = UUID().uuidString
+        let eventType = try container.decode(String.self, forKey: .eventType)
+        self.eventType = switch eventType {
+            case "courtSession":
+                .courtSession
+            case "deadlineSubmissionDocuments":
+                .deadlineSubmissionDocuments
+            default:
+                .meeting
+        }
+        
+        self.name = try container.decode(String.self, forKey: .name)
+        self.eventDescription = try container.decodeIfPresent(String.self, forKey: .eventDescription)
+        
+        self.date = try container.decode(TimeInterval.self, forKey: .date)
+        
+        self.location = try container.decodeIfPresent(String.self, forKey: .location)
+        self.clientId = try container.decode(String.self, forKey: .clientId)
+        self.caseId = try container.decode(String.self, forKey: .caseId)
+        self.laywerId = try container.decode(String.self, forKey: .laywerId)
     }
 }

@@ -1,0 +1,52 @@
+[
+    {
+      "lastName": "Иванов",
+      "firstName": "Алексей",
+      "fatherName": "Петрович",
+      "birthDateTimestamp": 631152000,
+      "phoneNumber": "+375291234567",
+      "email": "ivanov.alexei@example.com",
+      "address": "г. Минск, ул. Независимости, д. 15, кв. 42",
+      "clientType": "natural"
+    },
+    {
+      "lastName": "Петров",
+      "firstName": "Дмитрий",
+      "fatherName": "Александрович",
+      "birthDateTimestamp": 567993600,
+      "phoneNumber": "+375333456789",
+      "email": "petrov.dmitriy@example.com",
+      "address": "г. Гродно, ул. Советская, д. 10, кв. 21",
+      "clientType": "natural"
+    },
+    {
+      "lastName": "ООО",
+      "firstName": "\"БелПродукт\"",
+      "fatherName": null,
+      "birthDateTimestamp": 946684800,
+      "phoneNumber": "+375172223344",
+      "email": "info@belprodukt.by",
+      "address": "г. Минск, проспект Машерова, д. 5, офис 12",
+      "clientType": "legal"
+    },
+    {
+      "lastName": "ЧП",
+      "firstName": "\"ГомельСтрой\"",
+      "fatherName": null,
+      "birthDateTimestamp": 915148800,
+      "phoneNumber": "+375232556677",
+      "email": "contact@gomelstroy.by",
+      "address": "г. Гомель, ул. Ленина, д. 33, офис 8",
+      "clientType": "legal"
+    },
+    {
+      "lastName": "Сидоров",
+      "firstName": "Максим",
+      "fatherName": "Олегович",
+      "birthDateTimestamp": 757382400,
+      "phoneNumber": "+375295678901",
+      "email": "sidorov.maxim@example.com",
+      "address": "г. Брест, ул. Гоголя, д. 7, кв. 55",
+      "clientType": "natural"
+    }
+  ]

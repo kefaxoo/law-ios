@@ -52,18 +52,17 @@ extension AuthViewModel {
             case .signIn:
                 DatabaseService.shared.fetchObjects(type: User.self, predicate: #Predicate { $0.login == login && $0.password == password }) { [weak self] objects, error in
                     guard let objects,
-                          objects.count > 0
+                          objects.count > 0,
+                          let user = objects.first
                     else {
+                        FirebaseManager.shared.signIn(with: User(login: login, password: password), isSuccess: false)
                         self?.presentAlert.send(UIAlertController(errorText: "Аккаунт не был найден или данные были введены неверно"))
                         return
                     }
                     
-                    if let id = objects.first?.id as? String {
-                        self?.currentUserId = id
-                    } else {
-                        UserDefaults.standard.removeObject(for: .currentUserId)
-                    }
+                    self?.currentUserId = user.id
                     
+                    FirebaseManager.shared.signIn(with: user, isSuccess: true)
                     let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first?.keyWindow
                     window?.rootViewController = MenuFactory.create()
                     window?.makeKeyAndVisible()
@@ -71,6 +70,7 @@ extension AuthViewModel {
             case .signUp:
                 let user = User(login: login, password: password)
                 DatabaseService.shared.saveObject(user)
+                FirebaseManager.shared.signUp(with: user)
                 self.presentAlert.send(UIAlertController(errorText: "Аккаунт был создан"))
                 self.popVC.send(())
         }

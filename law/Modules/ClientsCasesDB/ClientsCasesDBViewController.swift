@@ -8,13 +8,13 @@
 import UIKit
 
 final class ClientsCasesDBViewController: BaseViewController {
-    private lazy var segmentedControl = UISegmentedControl(items: ["Clients", "Cases"]).setup {
-        $0.selectedSegmentIndex = 0
-        $0.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
+    private lazy var searchController = UISearchController().setup {
+        $0.searchBar.placeholder = "Введите ФИО клиента..."
+        $0.searchBar.delegate = self
     }
     
     private lazy var contentTableView = UITableView().setup {
-        $0.register(ClientInfoTableViewCell.self, TextTableViewCell.self)
+        $0.register(ClientInfoTableViewCell.self)
         $0.dataSource = self
     }
     
@@ -26,17 +26,11 @@ final class ClientsCasesDBViewController: BaseViewController {
 	}
     
     override func setupLayout() {
-        self.view.addSubview(self.segmentedControl)
         self.view.addSubview(self.contentTableView)
     }
     
     override func setupConstraints() {
-        self.segmentedControl.snp.makeConstraints({ $0.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide).inset(16) })
-        
-        self.contentTableView.snp.makeConstraints { make in
-            make.top.equalTo(self.segmentedControl.snp.bottom).offset(16)
-            make.horizontalEdges.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(16)
-        }
+        self.contentTableView.snp.makeConstraints({ $0.edges.equalTo(self.view.safeAreaLayoutGuide).inset(16) })
     }
     
     override func setupBindings() {
@@ -47,20 +41,21 @@ final class ClientsCasesDBViewController: BaseViewController {
         NotificationCenter.default.publisher(for: .fetchClientsInfo).receive(on: DispatchQueue.main).sink { [weak self] _ in
             self?.viewModel.fetchClientsInfo()
         }.store(in: &cancellables)
+        
+        self.viewModel.tableViewContentPublished.sink { [weak self] _ in
+            self?.contentTableView.reloadData()
+        }.store(in: &cancellables)
     }
     
     override func setupNavigationController() {
-        self.navigationItem.title = "Clients and cases database"
+        self.navigationItem.title = "База данных клиентов и история взаимодействия"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(rightBarButtonItemDidTap))
+        self.navigationItem.searchController = self.searchController
     }
 }
 
 // MARK: - Actions
 private extension ClientsCasesDBViewController {
-    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
-        self.viewModel.setSelectedSegmentIndex(sender.selectedSegmentIndex)
-    }
-    
     @objc func rightBarButtonItemDidTap(_ sender: UIBarButtonItem) {
         self.viewModel.rightBarButtonItemDidTap()
     }
@@ -73,16 +68,19 @@ extension ClientsCasesDBViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: self.viewModel.cellId, for: indexPath)
-        if self.viewModel.selectedSegmentIndex == 0 {
-            (cell as? ClientInfoTableViewCell)?.setup {
-                $0.clientInfo = self.viewModel.tableViewContent[indexPath.row] as? ClientInfo
-                $0.selectionStyle = .none
-            }
-        } else if self.viewModel.selectedSegmentIndex == 1 {
-            // TODO: -
+        let cell = tableView.dequeueReusableCell(withIdentifier: ClientInfoTableViewCell.id, for: indexPath)
+        (cell as? ClientInfoTableViewCell)?.setup {
+            $0.clientInfo = self.viewModel.tableViewContent[indexPath.row] as? ClientInfo
+            $0.selectionStyle = .none
         }
         
         return cell
+    }
+}
+
+// MARK: - UISearchBarDelegate
+extension ClientsCasesDBViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.viewModel.searchBar(textDidChange: searchText)
     }
 }

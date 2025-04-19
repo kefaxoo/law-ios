@@ -7,16 +7,31 @@
 
 import UIKit
 
-final class MenuViewController: ActionsViewController<MenuViewModel> {
+final class MenuViewController: NewActionsViewController<MenuViewModel> {
+    private lazy var signOutButton = UIButton().setup {
+        $0.setTitle("Выйти", for: .normal)
+        $0.setTitleColor(UIColor(hex: "#0B359D"), for: .normal)
+        $0.titleLabel?.font = .systemFont(ofSize: 19, weight: .regular)
+        $0.addTarget(self, action: #selector(signOutButtonDidTap), for: .touchUpInside)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.viewModel.viewDidLoad()
     }
     
-    override func setupNavigationController() {
-        self.navigationItem.title = "Menu"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Выйти", style: .done, target: self, action: #selector(rightBarButtonDidTap))
+    override func setupInterface() {
+        super.setupInterface()
+        
+        self.viewTitle = "Меню"
+    }
+    
+    override func setupLayout() {
+        super.setupLayout()
+        
+        self.topHStackView.addArrangedSubview(.spacer)
+        self.topHStackView.addArrangedSubview(self.signOutButton)
     }
     
     override func setupBindings() {
@@ -30,7 +45,7 @@ final class MenuViewController: ActionsViewController<MenuViewModel> {
 
 // MARK: - Actions
 private extension MenuViewController {
-    @objc func rightBarButtonDidTap(_ sender: UIBarButtonItem) {
+    @objc func signOutButtonDidTap(_ sender: UIButton) {
         self.viewModel.rightBarButtonDidTap()
     }
 }

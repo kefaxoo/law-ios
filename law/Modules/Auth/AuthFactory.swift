@@ -8,7 +8,7 @@
 import UIKit
 
 final class AuthFactory {
-    static func create(mode: AuthMode) -> AuthViewController {
-        AuthViewController(viewModel: AuthViewModel(mode: mode))
+    static func create(mode: AuthMode) -> NewAuthViewController {
+        NewAuthViewController(viewModel: AuthViewModel(mode: mode))
 	}
 }

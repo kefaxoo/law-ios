@@ -7,8 +7,10 @@
 
 import UIKit
 
-final class ClientsCasesViewController: ActionsViewController<ClientsCasesViewModel> {
-    override func setupNavigationController() {
-        self.navigationItem.title = "Clients and cases"
+final class ClientsCasesViewController: NewActionsViewController<ClientsCasesViewModel> {
+    override func setupInterface() {
+        super.setupInterface()
+        
+        self.viewTitle = "Управление клиентами и делами"
     }
 }

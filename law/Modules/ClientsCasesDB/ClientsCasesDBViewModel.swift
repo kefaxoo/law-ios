@@ -9,24 +9,7 @@ import UIKit
 import SwiftData
 
 final class ClientsCasesDBViewModel: ClientsCasesDBViewModelProtocol {
-    @Published var selectedSegmentIndex = 0
-    var selectedSegmentIndexPublished: CPublisher<Int> {
-        $selectedSegmentIndex.receive(on: DispatchQueue.main).eraseToAnyPublisher()
-    }
-    
-    var cellId: String {
-        switch self.selectedSegmentIndex {
-            case 0:
-                ClientInfoTableViewCell.id
-            case 1:
-                TextTableViewCell.id
-            default:
-                ""
-        }
-    }
-    
     private var clients = [ClientInfo]()
-    private var cases = [ClientInteractionHistory]()
     
     @Published var tableViewContent: [any PersistentModel] = []
     var tableViewContentPublished: CPublisher<[any PersistentModel]> {
@@ -37,24 +20,11 @@ final class ClientsCasesDBViewModel: ClientsCasesDBViewModelProtocol {
     
     init() {
         self.fetchClientsInfo()
-        self.fetchClientInteractionHistory()
     }
 }
 
 // MARK: - Actions
 extension ClientsCasesDBViewModel {
-    func setSelectedSegmentIndex(_ index: Int) {
-        self.selectedSegmentIndex = index
-        switch index {
-            case 0:
-                self.tableViewContent = self.clients
-            case 1:
-                self.tableViewContent = self.cases
-            default:
-                break
-        }
-    }
-    
     func rightBarButtonItemDidTap() {
         self.pushVC.send(AddClientFactory.create())
     }
@@ -65,19 +35,20 @@ extension ClientsCasesDBViewModel {
         DatabaseService.shared.fetchObjects(type: ClientInfo.self) { [weak self] objects, error in
             let objects = objects ?? []
             self?.clients = objects
-            if self?.selectedSegmentIndex == 0 {
-                self?.tableViewContent = objects
-            }
+            self?.tableViewContent = objects
         }
     }
-    
-    func fetchClientInteractionHistory() {
-        DatabaseService.shared.fetchObjects(type: ClientInteractionHistory.self) { [weak self] objects, error in
-            let objects = objects ?? []
-            self?.cases = objects
-            if self?.selectedSegmentIndex == 1 {
-                self?.tableViewContent = objects
-            }
+}
+
+// MARK: - Search
+extension ClientsCasesDBViewModel {
+    func searchBar(textDidChange text: String) {
+        guard !text.isEmpty else {
+            self.tableViewContent = self.clients
+            return
         }
+        
+        let text = text.lowercased()
+        self.tableViewContent = self.clients.filter({ $0.fullName.lowercased().contains(text) })
     }
 }

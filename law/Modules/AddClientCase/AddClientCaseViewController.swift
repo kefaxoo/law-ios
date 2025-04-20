@@ -9,17 +9,64 @@ import UIKit
 
 final class AddClientCaseViewController: BaseViewController {
     private lazy var caseTypeLabel = UILabel().setup({ $0.text = "Тип дела:" })
-    private lazy var caseTypeButton = UIButton(configuration: .tinted()).setup {
+    private lazy var caseTypeImageView = UIImageView().setup {
+        $0.snp.makeConstraints({ $0.size.equalTo(23) })
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private lazy var caseTypeButtonLabel = UILabel().setup {
+        $0.numberOfLines = 0
+        $0.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.textColor = UIColor(hex: "#0C5DFF")
+    }
+    
+    private lazy var caseTypeButton = UIButton().setup {
         $0.showsMenuAsPrimaryAction = true
         $0.menu = UIMenu(options: .displayInline, children: self.viewModel.caseTypeActions)
         $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 32) })
         $0.isEnabled = self.viewModel.clientCase == nil
+        $0.backgroundColor = UIColor(hex: "#F5F8FD")
+        $0.layer.cornerRadius = 8
+        $0.layer.masksToBounds = true
+        
+        $0.addSubview(self.caseTypeImageView)
+        self.caseTypeImageView.snp.makeConstraints({ $0.verticalEdges.leading.equalToSuperview().inset(13) })
+        $0.addSubview(self.caseTypeButtonLabel)
+        self.caseTypeButtonLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(self.caseTypeImageView.snp.trailing).offset(10)
+            make.trailing.equalToSuperview().inset(13)
+        }
     }
     
     private lazy var caseStatusLabel = UILabel().setup({ $0.text = "Статус дела:" })
-    private lazy var caseStatusButton = UIButton(configuration: .tinted()).setup {
+    private lazy var caseStatusImageView = UIImageView().setup {
+        $0.snp.makeConstraints({ $0.size.equalTo(23) })
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private lazy var caseStatusButtonLabel = UILabel().setup {
+        $0.numberOfLines = 0
+        $0.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.textColor = UIColor(hex: "#0C5DFF")
+    }
+    
+    private lazy var caseStatusButton = UIButton().setup {
         $0.showsMenuAsPrimaryAction = true
         $0.menu = UIMenu(options: .displayInline, children: self.viewModel.caseStatusActions)
+        
+        $0.backgroundColor = UIColor(hex: "#F5F8FD")
+        $0.layer.cornerRadius = 8
+        $0.layer.masksToBounds = true
+        
+        $0.addSubview(self.caseStatusImageView)
+        self.caseStatusImageView.snp.makeConstraints({ $0.verticalEdges.leading.equalToSuperview().inset(13) })
+        $0.addSubview(self.caseStatusButtonLabel)
+        self.caseStatusButtonLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(self.caseStatusImageView.snp.trailing).offset(10)
+            make.trailing.equalToSuperview().inset(13)
+        }
     }
     
     private lazy var startDateLabel = UILabel().setup({ $0.text = "Дата начала:" })
@@ -115,11 +162,13 @@ final class AddClientCaseViewController: BaseViewController {
     
     override func setupBindings() {
         self.viewModel.selectedCaseTypePublished.sink { [weak self] caseType in
-            self?.caseTypeButton.setTitle(caseType.title, for: .normal)
+            self?.caseTypeButtonLabel.text = caseType.title
+            self?.caseTypeImageView.image = caseType.image
         }.store(in: &cancellables)
         
         self.viewModel.selectedCaseStatusPublished.sink { [weak self] status in
-            self?.caseStatusButton.setTitle(status.title, for: .normal)
+            self?.caseStatusButtonLabel.text = status.title
+            self?.caseStatusImageView.image = status.image
             self?.endDateLabel.isHidden = status == .active
             self?.endDatePickerView.isHidden = status == .active
         }.store(in: &cancellables)

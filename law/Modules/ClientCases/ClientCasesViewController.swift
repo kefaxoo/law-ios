@@ -12,6 +12,7 @@ final class ClientCasesViewController: BaseViewController {
         $0.dataSource = self
         $0.register(ClientCaseTableViewCell.self)
         $0.delegate = self
+        $0.separatorStyle = .none
     }
     
     private let viewModel: ClientCasesViewModelProtocol
@@ -23,7 +24,7 @@ final class ClientCasesViewController: BaseViewController {
     
     override func setupNavigationController() {
         self.navigationItem.title = self.viewModel.client.fullName
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(rightBarButtonDidTap))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(rightBarButtonDidTap))
     }
     
     override func setupBindings() {

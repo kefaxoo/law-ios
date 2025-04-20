@@ -5,7 +5,7 @@
 //  Created by Bahdan Piatrouski on 17.12.24.
 //
 
-import Foundation
+import UIKit
 import SwiftData
 
 @Model final class ClientCase: Decodable {
@@ -26,6 +26,17 @@ import SwiftData
                     "Администрирование"
             }
         }
+        
+        var image: UIImage {
+            switch self {
+                case .criminal:
+                    .crimial
+                case .civil:
+                    .civil
+                case .administrative:
+                    .administrative
+            }
+        }
     }
     
     enum Status: Codable, CaseIterable {
@@ -41,6 +52,35 @@ import SwiftData
                      "Завершенное"
                 case .archived:
                     "Архив"
+            }
+        }
+        
+        var backgroundColor: UIColor {
+            switch self {
+                case .active, .archived:
+                    UIColor(hex: "#F0F7FE")
+                case .closed:
+                    UIColor(hex: "#247DFC")
+            }
+        }
+        
+        var textColor: UIColor {
+            switch self {
+                case .active, .archived:
+                    UIColor(hex: "#000003")
+                case .closed:
+                    .white
+            }
+        }
+        
+        var image: UIImage {
+            switch self {
+                case .active:
+                    .active
+                case .closed:
+                    .closed
+                case .archived:
+                    .archived
             }
         }
     }

@@ -8,8 +8,17 @@
 import UIKit
 
 final class ClientShortTableViewCell: BaseTableViewCell {
-    private lazy var clientNameLabel = UILabel()
-    private lazy var clientTypeLabel = UILabel()
+    private lazy var clientNameLabel = UILabel().setup {
+        $0.font = .systemFont(ofSize: 19, weight: .regular)
+        $0.textColor = UIColor(hex: "#083B81")
+        $0.numberOfLines = 0
+    }
+    
+    private lazy var clientTypeLabel = UILabel().setup {
+        $0.numberOfLines = 0
+        $0.textColor = UIColor(hex: "#232728")
+        $0.font = .systemFont(ofSize: 19, weight: .regular)
+    }
     
     private lazy var vStackView = UIStackView().setup {
         $0.axis = .vertical
@@ -30,6 +39,10 @@ final class ClientShortTableViewCell: BaseTableViewCell {
     }
     
     override func setupConstraints() {
-        self.vStackView.snp.makeConstraints({ $0.edges.equalToSuperview().inset(8) })
+        self.vStackView.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview().inset(17)
+            make.top.equalToSuperview().inset(11)
+            make.bottom.equalToSuperview().inset(10)
+        }
     }
 }

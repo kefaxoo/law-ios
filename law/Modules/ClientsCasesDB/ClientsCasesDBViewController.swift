@@ -14,8 +14,12 @@ final class ClientsCasesDBViewController: BaseViewController {
     }
     
     private lazy var contentTableView = UITableView().setup {
-        $0.register(ClientInfoTableViewCell.self)
+        $0.register(NewClientInfoTableViewCell.self)
         $0.dataSource = self
+        $0.backgroundColor = UIColor(hex: "#EEF0F6")
+        $0.layer.cornerRadius = 16
+        $0.layer.masksToBounds = true
+        $0.separatorStyle = .none
     }
     
     private let viewModel: ClientsCasesDBViewModelProtocol
@@ -30,7 +34,10 @@ final class ClientsCasesDBViewController: BaseViewController {
     }
     
     override func setupConstraints() {
-        self.contentTableView.snp.makeConstraints({ $0.edges.equalTo(self.view.safeAreaLayoutGuide).inset(16) })
+        self.contentTableView.snp.makeConstraints { make in
+            make.verticalEdges.equalTo(self.view.safeAreaLayoutGuide)
+            make.horizontalEdges.equalToSuperview().inset(16)
+        }
     }
     
     override func setupBindings() {
@@ -48,7 +55,7 @@ final class ClientsCasesDBViewController: BaseViewController {
     }
     
     override func setupNavigationController() {
-        self.navigationItem.title = "База данных клиентов и история взаимодействия"
+        self.navigationItem.title = "База данных клиентов"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(rightBarButtonItemDidTap))
         self.navigationItem.searchController = self.searchController
     }
@@ -68,12 +75,8 @@ extension ClientsCasesDBViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ClientInfoTableViewCell.id, for: indexPath)
-        (cell as? ClientInfoTableViewCell)?.setup {
-            $0.clientInfo = self.viewModel.tableViewContent[indexPath.row] as? ClientInfo
-            $0.selectionStyle = .none
-        }
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: NewClientInfoTableViewCell.id, for: indexPath)
+        (cell as? NewClientInfoTableViewCell)?.client = self.viewModel.tableViewContent[indexPath.row] as? ClientInfo
         return cell
     }
 }

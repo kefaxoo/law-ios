@@ -79,7 +79,11 @@ final class AddClientViewController: BaseViewController {
     override func setupInterface() {
         super.setupInterface()
         
-        self.addKeyboardDismiss()
+        self.setupKeyboardSupport { height in
+            self.addClientButton.snp.updateConstraints { make in
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(16 + height)
+            }
+        }
     }
     
     override func setupLayout() {
@@ -111,7 +115,7 @@ final class AddClientViewController: BaseViewController {
     }
     
     override func setupNavigationController() {
-        self.navigationItem.title = "Add client"
+        self.navigationItem.title = "Добавление клиента"
     }
 }
 

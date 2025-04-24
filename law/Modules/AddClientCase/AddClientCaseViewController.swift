@@ -8,7 +8,12 @@
 import UIKit
 
 final class AddClientCaseViewController: BaseViewController {
-    private lazy var caseTypeLabel = UILabel().setup({ $0.text = "Тип дела:" })
+    private lazy var caseTypeLabel = UILabel().setup {
+        $0.text = "Тип дела:"
+        $0.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.textColor = UIColor(hex: "#5B5F6D")
+    }
+    
     private lazy var caseTypeImageView = UIImageView().setup {
         $0.snp.makeConstraints({ $0.size.equalTo(23) })
         $0.contentMode = .scaleAspectFit
@@ -39,7 +44,12 @@ final class AddClientCaseViewController: BaseViewController {
         }
     }
     
-    private lazy var caseStatusLabel = UILabel().setup({ $0.text = "Статус дела:" })
+    private lazy var caseStatusLabel = UILabel().setup {
+        $0.text = "Статус дела:"
+        $0.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.textColor = UIColor(hex: "#5B5F6D")
+    }
+    
     private lazy var caseStatusImageView = UIImageView().setup {
         $0.snp.makeConstraints({ $0.size.equalTo(23) })
         $0.contentMode = .scaleAspectFit
@@ -69,7 +79,12 @@ final class AddClientCaseViewController: BaseViewController {
         }
     }
     
-    private lazy var startDateLabel = UILabel().setup({ $0.text = "Дата начала:" })
+    private lazy var startDateLabel = UILabel().setup {
+        $0.text = "Дата начала:"
+        $0.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.textColor = UIColor(hex: "#5B5F6D")
+    }
+    
     private lazy var startDatePickerView = UIDatePicker().setup {
         $0.date = self.viewModel.clientCase?.startDate.toDate ?? Date()
         $0.datePickerMode = .date
@@ -81,6 +96,8 @@ final class AddClientCaseViewController: BaseViewController {
     private lazy var endDateLabel = UILabel().setup {
         $0.text = "Дата окончания:"
         $0.isHidden = true
+        $0.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.textColor = UIColor(hex: "#5B5F6D")
     }
     
     private lazy var endDatePickerView = UIDatePicker().setup {
@@ -94,16 +111,27 @@ final class AddClientCaseViewController: BaseViewController {
         $0.isHidden = true
     }
     
-    private lazy var eventDatesLabel = UILabel().setup({ $0.text = "События по делу:" })
+    private lazy var eventDatesLabel = UILabel().setup {
+        $0.text = "События по делу:"
+        $0.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.textColor = UIColor(hex: "#5B5F6D")
+    }
+    
     private lazy var eventDatesTableView = UITableView().setup {
         $0.register(TextFieldDatePickerTableViewCell.self)
         $0.dataSource = self
         $0.separatorStyle = .none
     }
     
-    private lazy var addEventDateButton = UIButton(configuration: .tinted()).setup {
+    private lazy var addEventDateButton = UIButton().setup {
         $0.setTitle("Добавить новое событие", for: .normal)
         $0.addTarget(self, action: #selector(addEventDateDidTap), for: .touchUpInside)
+        $0.setTitleColor(UIColor(hex: "#0C5DFF"), for: .normal)
+        $0.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.backgroundColor = UIColor(hex: "#F5F8FD")
+        $0.layer.cornerRadius = 8
+        $0.layer.masksToBounds = true
+        $0.contentEdgeInsets = .init(top: 13, left: 0, bottom: 13, right: 0)
     }
     
     private lazy var dynamicVStackView = DynamicScrollView(axis: .vertical).setup {
@@ -120,9 +148,15 @@ final class AddClientCaseViewController: BaseViewController {
         $0.addSubview(self.addEventDateButton)
     }
     
-    private lazy var addCaseButton = UIButton(configuration: .filled()).setup {
+    private lazy var addCaseButton = UIButton().setup {
         $0.setTitle(self.viewModel.clientCase == nil ? "Добавить событие" : "Изменить событие", for: .normal)
         $0.addTarget(self, action: #selector(addCaseDidTap), for: .touchUpInside)
+        $0.setTitleColor(UIColor(hex: "#FFFDFD"), for: .normal)
+        $0.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.backgroundColor = UIColor(hex: "#367EFF")
+        $0.layer.cornerRadius = 8
+        $0.layer.masksToBounds = true
+        $0.contentEdgeInsets = .init(top: 13, left: 0, bottom: 13, right: 0)
     }
     
     private let viewModel: AddClientCaseViewModelProtocol

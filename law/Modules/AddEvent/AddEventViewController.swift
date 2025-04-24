@@ -9,28 +9,86 @@ import UIKit
 import MessageUI
 
 final class AddEventViewController: BaseViewController {
-    private lazy var eventTypeLabel = UILabel().setup { $0.text = "Тип события:" }
-    private lazy var eventTypeButton = UIButton(configuration: .tinted()).setup {
+    private lazy var eventTypeImageView = UIImageView().setup {
+        $0.contentMode = .scaleAspectFit
+        $0.tintColor = .white
+        $0.snp.makeConstraints { make in
+            make.width.equalTo(36)
+            make.height.equalTo(30)
+        }
+    }
+    
+    private lazy var eventTypeImageViewContentView = UIView().setup {
+        $0.backgroundColor = UIColor(hex: "#3082ED")
+        $0.layer.cornerRadius = 10
+        $0.layer.masksToBounds = true
+        $0.addSubview(self.eventTypeImageView)
+        self.eventTypeImageView.snp.makeConstraints({ $0.edges.equalToSuperview().inset(10) })
+    }
+    
+    private lazy var eventTypeLabel = UILabel().setup {
+        $0.font = .systemFont(ofSize: 19, weight: .medium)
+        $0.textColor = .black
+        $0.numberOfLines = 1
+    }
+    
+    private lazy var eventTypeButton = UIButton().setup {
         $0.showsMenuAsPrimaryAction = true
         $0.menu = UIMenu(options: .displayInline, children: self.viewModel.eventTypeActions)
-        $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 32) })
+        $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 38) })
+        $0.addSubview(self.eventTypeImageViewContentView)
+        self.eventTypeImageViewContentView.snp.makeConstraints({ $0.verticalEdges.leading.equalToSuperview() })
+        $0.backgroundColor = UIColor(hex: "#FBFCFC")
+        $0.layer.masksToBounds = true
+        $0.layer.cornerRadius = 10
+        $0.addSubview(self.eventTypeLabel)
+        self.eventTypeLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(self.eventTypeImageViewContentView.snp.trailing).offset(13)
+            make.trailing.equalToSuperview().inset(13)
+        }
     }
     
-    private lazy var nameLabel = UILabel().setup { $0.text = "Название события:" }
+    private lazy var nameLabel = UILabel().setup {
+        $0.text = "Название события:"
+        $0.textColor = .black
+        $0.font = .systemFont(ofSize: 17, weight: .medium)
+    }
+    
     private lazy var nameTextField = UITextField.roundedRect.setup {
-        $0.placeholder = "Введите название события..."
+        $0.placeholder = "Плановая встреча"
     }
     
-    private lazy var descriptionLabel = UILabel().setup { $0.text = "Описание события:" }
+    private lazy var descriptionLabel = UILabel().setup { $0.text = "Описание:" }
     private lazy var descriptionTextField = UITextField.roundedRect.setup {
-        $0.placeholder = "Введите описание события..."
+        $0.placeholder = "Введите описание..."
     }
     
-    private lazy var dateLabel = UILabel().setup({ $0.text = "Дата и время события:" })
+    private lazy var dateImageView = UIImageView().setup {
+        $0.contentMode = .scaleAspectFit
+        $0.image = .calendarIcon
+        $0.snp.makeConstraints({ $0.size.equalTo(17) })
+        $0.tintColor = .black
+    }
+    
+    private lazy var dateLabel = UILabel().setup {
+        $0.text = "Дата и время"
+        $0.textColor = .black
+        $0.font = .systemFont(ofSize: 18)
+    }
+    
     private lazy var datePickerView = UIDatePicker().setup {
         $0.minimumDate = Date()
         $0.datePickerMode = .dateAndTime
         $0.addTarget(self, action: #selector(dateDidChange), for: .valueChanged)
+    }
+    
+    private lazy var dateHStackView = UIStackView().setup {
+        $0.axis = .horizontal
+        $0.spacing = 6
+        $0.addArrangedSubview(self.dateImageView)
+        $0.addArrangedSubview(self.dateLabel)
+        $0.addArrangedSubview(self.datePickerView)
     }
     
     private lazy var locationLabel = UILabel().setup({ $0.text = "Место события:" })
@@ -83,14 +141,12 @@ final class AddEventViewController: BaseViewController {
     }
     
     private lazy var dynamicVScrollView = DynamicScrollView(axis: .vertical).setup {
-        $0.addSubview(self.eventTypeLabel, spacingAfter: 16)
-        $0.addSubview(self.eventTypeButton, spacingAfter: 16)
-        $0.addSubview(self.nameLabel, spacingAfter: 16)
-        $0.addSubview(self.nameTextField, spacingAfter: 16)
-        $0.addSubview(self.descriptionLabel, spacingAfter: 16)
-        $0.addSubview(self.descriptionTextField, spacingAfter: 16)
-        $0.addSubview(self.dateLabel, spacingAfter: 16)
-        $0.addSubview(self.datePickerView, spacingAfter: 16)
+        $0.addSubview(self.eventTypeButton, spacingAfter: 21)
+        $0.addSubview(self.nameLabel, spacingAfter: 8)
+        $0.addSubview(self.nameTextField, spacingAfter: 18)
+        $0.addSubview(self.descriptionLabel, spacingAfter: 8)
+        $0.addSubview(self.descriptionTextField, spacingAfter: 18)
+        $0.addSubview(self.dateHStackView, spacingAfter: 27)
         $0.addSubview(self.locationLabel, spacingAfter: 16)
         $0.addSubview(self.locationTextField, spacingAfter: 16)
         $0.addSubview(self.clientLabel, spacingAfter: 16)
@@ -125,10 +181,10 @@ final class AddEventViewController: BaseViewController {
     }
     
     override func setupConstraints() {
-        self.dynamicVScrollView.snp.makeConstraints({ $0.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide).inset(16) })
+        self.dynamicVScrollView.snp.makeConstraints({ $0.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide).inset(19) })
         
         self.addButton.snp.makeConstraints { make in
-            make.horizontalEdges.equalToSuperview().inset(16)
+            make.horizontalEdges.equalToSuperview().inset(19)
             make.bottom.equalTo(self.view.safeAreaLayoutGuide)
             make.top.equalTo(self.dynamicVScrollView.snp.bottom).offset(16)
         }
@@ -140,7 +196,8 @@ final class AddEventViewController: BaseViewController {
     
     override func setupBindings() {
         self.viewModel.selectedEventTypePublished.sink { [weak self] eventType in
-            self?.eventTypeButton.setTitle(eventType.title, for: .normal)
+            self?.eventTypeImageView.image = eventType.image
+            self?.eventTypeLabel.text = eventType.title
         }.store(in: &cancellables)
         
         self.viewModel.pushVC.sink { [weak self] vc in

@@ -5,7 +5,7 @@
 //  Created by Bahdan Piatrouski on 6.01.25.
 //
 
-import Foundation
+import UIKit
 import SwiftData
 
 @Model final class CalendarEvent: Decodable {
@@ -22,6 +22,17 @@ import SwiftData
                     "Судебное заседание"
                 case .deadlineSubmissionDocuments:
                     "Срок подачи документов"
+            }
+        }
+        
+        var image: UIImage {
+            switch self {
+                case .meeting:
+                    .meeting
+                case .courtSession:
+                    .courtSession
+                case .deadlineSubmissionDocuments:
+                    .deadlineSubmissionDocuments
             }
         }
     }

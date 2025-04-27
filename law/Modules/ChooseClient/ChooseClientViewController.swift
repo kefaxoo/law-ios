@@ -10,8 +10,10 @@ import UIKit
 final class ChooseClientViewController: BaseViewController {
     private lazy var clientsTableView = UITableView().setup {
         $0.dataSource = self
-        $0.register(TextTableViewCell.self)
+        $0.register(ClientTableViewCell.self)
         $0.delegate = self
+        $0.separatorStyle = .none
+        $0.contentInset = .init(top: 9, left: 0, bottom: 0, right: 0)
     }
     
     private let viewModel: ChooseClientViewModelProtocol
@@ -26,7 +28,7 @@ final class ChooseClientViewController: BaseViewController {
 	}
     
     override func setupNavigationController() {
-        self.navigationItem.title = "Выберите клиента:"
+        self.navigationItem.title = "Выберите клиента"
     }
     
     override func setupLayout() {
@@ -34,7 +36,10 @@ final class ChooseClientViewController: BaseViewController {
     }
     
     override func setupConstraints() {
-        self.clientsTableView.snp.makeConstraints({ $0.edges.equalTo(self.view.safeAreaLayoutGuide) })
+        self.clientsTableView.snp.makeConstraints { make in
+            make.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
+        }
     }
     
     override func setupBindings() {
@@ -56,8 +61,8 @@ extension ChooseClientViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TextTableViewCell.id, for: indexPath)
-        (cell as? TextTableViewCell)?.text = self.viewModel.clients[indexPath.row].fullName
+        let cell = tableView.dequeueReusableCell(withIdentifier: ClientTableViewCell.id, for: indexPath)
+        (cell as? ClientTableViewCell)?.client = self.viewModel.clients[indexPath.row]
         return cell
     }
 }

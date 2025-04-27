@@ -5,7 +5,7 @@
 //  Created by Bahdan Piatrouski on 23.02.25.
 //
 
-import Foundation
+import UIKit
 
 fileprivate extension Double {
     var twoDigitsString: String {
@@ -31,6 +31,45 @@ extension FinanceAnalyticsType {
                 "💳 Оплаченные счета: \(percent.twoDigitsString)%"
             case .accountsReceivables(let sum):
                 "Сумма дебиторской задолженности: \(sum.twoDigitsString)"
+        }
+    }
+    
+    var value: String {
+        switch self {
+            case .commonIncome(let income):
+                "\(income.twoDigitsString)"
+            case .averageClientBill(let bill):
+                "\(bill.twoDigitsString)"
+            case .paidBills(let percent):
+                "\(percent.twoDigitsString)%"
+            case .accountsReceivables(let sum):
+                "\(sum.twoDigitsString)"
+        }
+    }
+    
+    var icon: UIImage? {
+        switch self {
+            case .commonIncome:
+                "💰".image(size: CGSize(width: 28, height: 28))
+            case .averageClientBill:
+                .contractIcon
+            case .paidBills:
+                .closed
+            case .accountsReceivables:
+                nil
+        }
+    }
+    
+    var title: String {
+        switch self {
+            case .commonIncome:
+                "Общий доход:"
+            case .averageClientBill:
+                "Средний чек клиента:"
+            case .paidBills:
+                "Оплаченные счета:"
+            case .accountsReceivables:
+                "Сумма дебиторской задолженности:"
         }
     }
 }

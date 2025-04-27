@@ -5,7 +5,7 @@
 //  Created by Bahdan Piatrouski on 17.02.25.
 //
 
-import Foundation
+import UIKit
 import SwiftData
 
 @Model final class FinanceOperation: Decodable {
@@ -39,6 +39,17 @@ import SwiftData
                     "В ожидании"
                 case .canceled:
                     "Отменена"
+            }
+        }
+        
+        var color: UIColor {
+            switch self {
+                case .done:
+                    UIColor(hex: "#696B6C")
+                case .pending:
+                    UIColor(hex: "#1481DD")
+                case .canceled:
+                    UIColor(hex: "#BA1014")
             }
         }
     }

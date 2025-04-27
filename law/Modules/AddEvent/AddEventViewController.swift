@@ -80,6 +80,7 @@ final class AddEventViewController: BaseViewController {
     private lazy var datePickerView = UIDatePicker().setup {
         $0.minimumDate = Date()
         $0.datePickerMode = .dateAndTime
+        $0.contentHorizontalAlignment = .leading
         $0.addTarget(self, action: #selector(dateDidChange), for: .valueChanged)
     }
     
@@ -88,24 +89,53 @@ final class AddEventViewController: BaseViewController {
         $0.spacing = 6
         $0.addArrangedSubview(self.dateImageView)
         $0.addArrangedSubview(self.dateLabel)
+    }
+    
+    private lazy var dateVStackView = UIStackView().setup {
+        $0.axis = .vertical
+        $0.spacing = 8
+        $0.addArrangedSubview(self.dateHStackView)
         $0.addArrangedSubview(self.datePickerView)
     }
     
-    private lazy var locationLabel = UILabel().setup({ $0.text = "Место события:" })
+    private lazy var locationLabel = UILabel().setup {
+        $0.text = "Место события:"
+        $0.textColor = .black
+        $0.font = .systemFont(ofSize: 18)
+    }
+    
     private lazy var locationTextField = UITextField.roundedRect.setup {
         $0.placeholder = "Введите место события..."
     }
     
-    private lazy var clientLabel = UILabel().setup({ $0.text = "Клиент, связанный с событием:" })
-    private lazy var clientButton = UIButton(configuration: .tinted()).setup {
-        $0.setTitle("Выберите клиента, связанного с событием", for: .normal)
+    private lazy var clientLabel = UILabel().setup {
+        $0.text = "Клиент, связанный с событием:"
+        $0.textColor = .black
+        $0.font = .systemFont(ofSize: 18)
+    }
+    
+    private lazy var clientButton = AddEventButton().setup {
         $0.addTarget(self, action: #selector(clientButtonDidTap), for: .touchUpInside)
+        $0.layer.cornerRadius = 6
+        $0.layer.masksToBounds = true
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor(hex: "#C6C6C6").cgColor
+        $0.image = .clientIcon
+        $0.text = "Выберите клиента"
+        $0.tintColor = UIColor(hex: "#2076F3")
     }
     
     private lazy var caseLabel = UILabel().setup({ $0.text = "Дело, связанное с событием:" })
-    private lazy var caseButton = UIButton(configuration: .tinted()).setup {
-        $0.setTitle("Выберите дело, связанное с событием", for: .normal)
+    
+    private lazy var caseButton = AddEventButton().setup {
         $0.addTarget(self, action: #selector(caseButtonDidTap), for: .touchUpInside)
+        $0.layer.cornerRadius = 6
+        $0.layer.masksToBounds = true
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor(hex: "#C6C6C6").cgColor
+        $0.image = .caseIcon
+        $0.text = "Выберите дело"
+        $0.tintColor = UIColor(hex: "#2076F3")
     }
     
     private lazy var toggleReminderLabel = UILabel().setup {
@@ -146,20 +176,26 @@ final class AddEventViewController: BaseViewController {
         $0.addSubview(self.nameTextField, spacingAfter: 18)
         $0.addSubview(self.descriptionLabel, spacingAfter: 8)
         $0.addSubview(self.descriptionTextField, spacingAfter: 18)
-        $0.addSubview(self.dateHStackView, spacingAfter: 27)
+        $0.addSubview(self.dateVStackView, spacingAfter: 27)
         $0.addSubview(self.locationLabel, spacingAfter: 16)
         $0.addSubview(self.locationTextField, spacingAfter: 16)
-        $0.addSubview(self.clientLabel, spacingAfter: 16)
+        $0.addSubview(self.clientLabel, spacingAfter: 8)
         $0.addSubview(self.clientButton, spacingAfter: 16)
-        $0.addSubview(self.caseLabel, spacingAfter: 16)
+        $0.addSubview(self.caseLabel, spacingAfter: 8)
         $0.addSubview(self.caseButton, spacingAfter: 16)
         $0.addSubview(self.toggleReminderHStackView, spacingAfter: 16)
         $0.addSubview(self.setupReminderHStackView, spacingAfter: 16)
     }
     
-    private lazy var addButton = UIButton(configuration: .filled()).setup {
+    private lazy var addEventButton = UIButton().setup {
         $0.setTitle("Добавить событие", for: .normal)
         $0.addTarget(self, action: #selector(addButtonDidTap), for: .touchUpInside)
+        $0.setTitleColor(UIColor(hex: "#FFFDFD"), for: .normal)
+        $0.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        $0.backgroundColor = UIColor(hex: "#367EFF")
+        $0.layer.cornerRadius = 8
+        $0.layer.masksToBounds = true
+        $0.contentEdgeInsets = .init(top: 13, left: 0, bottom: 13, right: 0)
     }
     
     private let viewModel: AddEventViewModelProtocol
@@ -177,13 +213,13 @@ final class AddEventViewController: BaseViewController {
     
     override func setupLayout() {
         self.view.addSubview(self.dynamicVScrollView)
-        self.view.addSubview(self.addButton)
+        self.view.addSubview(self.addEventButton)
     }
     
     override func setupConstraints() {
         self.dynamicVScrollView.snp.makeConstraints({ $0.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide).inset(19) })
         
-        self.addButton.snp.makeConstraints { make in
+        self.addEventButton.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview().inset(19)
             make.bottom.equalTo(self.view.safeAreaLayoutGuide)
             make.top.equalTo(self.dynamicVScrollView.snp.bottom).offset(16)
@@ -205,11 +241,11 @@ final class AddEventViewController: BaseViewController {
         }.store(in: &cancellables)
         
         self.viewModel.selectedClientPublished.sink { [weak self] client in
-            self?.clientButton.setTitle(client?.fullName ?? "Выберите клиента, связанного с событием", for: .normal)
+            self?.clientButton.text = client?.fullName ?? "Выберите клиента"
         }.store(in: &cancellables)
         
         self.viewModel.selectedCasePublished.sink { [weak self] `case` in
-            self?.caseButton.setTitle(`case`?.title ?? "Выберите дело, связанное с событием", for: .normal)
+            self?.caseButton.text = `case`?.title ?? "Выберите дело"
         }.store(in: &cancellables)
         
         self.viewModel.present.sink { [weak self] alert in
@@ -246,7 +282,7 @@ final class AddEventViewController: BaseViewController {
             self?.clientButton.isEnabled = false
             self?.caseButton.isEnabled = false
             
-            self?.addButton.setTitle("Отправить напоминание клиенту?", for: .normal)
+            self?.addEventButton.setTitle("Отправить напоминание клиенту?", for: .normal)
             
             self?.setupReminderHStackView.isHidden = true
             self?.toggleReminderHStackView.isHidden = true

@@ -9,23 +9,33 @@ import UIKit
 
 final class AddFinanceOperationViewController: BaseViewController {
     private lazy var clientLabel = UILabel().setup {
-        $0.text = "Выберите клиента:"
-        $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 32) })
+        $0.text = "Клиент, связанный с операцией:"
+        $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 38) })
     }
     
-    private lazy var clientButton = UIButton(configuration: .tinted()).setup {
-        $0.setTitle("Выберите клиента", for: .normal)
+    private lazy var clientButton = AddEventButton().setup {
         $0.addTarget(self, action: #selector(clientButtonDidTap), for: .touchUpInside)
+        $0.layer.cornerRadius = 6
+        $0.layer.masksToBounds = true
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor(hex: "#C6C6C6").cgColor
+        $0.image = .clientIcon
+        $0.text = "Выберите клиента"
+        $0.tintColor = UIColor(hex: "#2076F3")
     }
     
-    private lazy var caseLabel = UILabel().setup { $0.text = "Выберите дело:" }
-    
-    private lazy var caseButton = UIButton(configuration: .tinted()).setup {
-        $0.setTitle("Выберите дело", for: .normal)
+    private lazy var caseButton = AddEventButton().setup {
         $0.addTarget(self, action: #selector(caseButtonDidTap), for: .touchUpInside)
+        $0.layer.cornerRadius = 6
+        $0.layer.masksToBounds = true
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor(hex: "#C6C6C6").cgColor
+        $0.image = .caseIcon
+        $0.text = "Выберите дело"
+        $0.tintColor = UIColor(hex: "#2076F3")
     }
     
-    private lazy var amountLabel = UILabel().setup { $0.text = "Введите сумму:" }
+    private lazy var amountLabel = UILabel().setup { $0.text = "Введите сумму" }
     private lazy var amountTextField = UITextField.roundedRect.setup {
         $0.placeholder = "Введите сумму..."
         $0.keyboardType = .decimalPad
@@ -33,42 +43,39 @@ final class AddFinanceOperationViewController: BaseViewController {
     }
     
     private lazy var transactionTypeLabel = UILabel().setup { $0.text = "Выберите тип транзакции:" }
-    
-    private lazy var transactionTypeButton = UIButton(configuration: .tinted()).setup {
+    private lazy var transactionTypeButton = BaseBlueButton().setup {
         $0.showsMenuAsPrimaryAction = true
         $0.menu = self.viewModel.transactionTypeMenu
     }
     
     private lazy var statusLabel = UILabel().setup { $0.text = "Выберите статус операции:" }
-    
-    private lazy var statusButton = UIButton(configuration: .tinted()).setup {
+    private lazy var statusButton = BaseBlueButton().setup {
         $0.showsMenuAsPrimaryAction = true
         $0.menu = self.viewModel.statusMenu
     }
     
     private lazy var paymentMethodLabel = UILabel().setup { $0.text = "Выберите способ оплаты:" }
     
-    private lazy var paymentMethodButton = UIButton(configuration: .tinted()).setup {
+    private lazy var paymentMethodButton = BaseBlueButton().setup {
         $0.showsMenuAsPrimaryAction = true
         $0.menu = self.viewModel.paymentMethodMenu
     }
     
     private lazy var dynamicVStackView = DynamicScrollView(axis: .vertical).setup {
         $0.addSubview(self.clientLabel, spacingAfter: 8)
-        $0.addSubview(self.clientButton, spacingAfter: 16)
-        $0.addSubview(self.caseLabel, spacingAfter: 8)
-        $0.addSubview(self.caseButton, spacingAfter: 16)
+        $0.addSubview(self.clientButton, spacingAfter: 21)
+        $0.addSubview(self.caseButton, spacingAfter: 21)
         $0.addSubview(self.amountLabel, spacingAfter: 8)
-        $0.addSubview(self.amountTextField, spacingAfter: 16)
-        $0.addSubview(self.transactionTypeLabel, spacingAfter: 8)
-        $0.addSubview(self.transactionTypeButton, spacingAfter: 16)
-        $0.addSubview(self.statusLabel, spacingAfter: 8)
-        $0.addSubview(self.statusButton, spacingAfter: 16)
-        $0.addSubview(self.paymentMethodLabel, spacingAfter: 8)
-        $0.addSubview(self.paymentMethodButton, spacingAfter: 16)
+        $0.addSubview(self.amountTextField, spacingAfter: 21)
+        $0.addSubview(self.transactionTypeLabel, spacingAfter: 11)
+        $0.addSubview(self.transactionTypeButton, spacingAfter: 21)
+        $0.addSubview(self.statusLabel, spacingAfter: 11)
+        $0.addSubview(self.statusButton, spacingAfter: 21)
+        $0.addSubview(self.paymentMethodLabel, spacingAfter: 11)
+        $0.addSubview(self.paymentMethodButton, spacingAfter: 21)
     }
     
-    private lazy var bottomButton = UIButton(configuration: .filled()).setup {
+    private lazy var bottomButton = BaseBlueButton().setup {
         $0.setTitle("\(self.isAdd ? "Добавить" : "Редактировать") операции", for: .normal)
         $0.addTarget(self, action: #selector(addButtonDidTap), for: .touchUpInside)
     }
@@ -99,9 +106,10 @@ final class AddFinanceOperationViewController: BaseViewController {
     }
     
     override func setupConstraints() {
-        self.dynamicVStackView.snp.makeConstraints({ $0.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide).inset(16) })
+        self.dynamicVStackView.snp.makeConstraints({ $0.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide).inset(19) })
         self.bottomButton.snp.makeConstraints { make in
-            make.horizontalEdges.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(16)
+            make.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide).inset(19)
+            make.bottom.equalTo(self.view.safeAreaLayoutGuide)
             make.top.equalTo(self.dynamicVStackView.snp.bottom).offset(16)
         }
     }
@@ -124,7 +132,7 @@ final class AddFinanceOperationViewController: BaseViewController {
         }.store(in: &cancellables)
         
         self.viewModel.selectedClientPublished.sink { [weak self] client in
-            self?.clientButton.setTitle(client?.fullName ?? "Выберите клиента", for: .normal)
+            self?.clientButton.text = client?.fullName ?? "Выберите клиента"
         }.store(in: &cancellables)
         
         self.viewModel.showChooseCaseScreen.sink { [weak self] client in
@@ -132,7 +140,7 @@ final class AddFinanceOperationViewController: BaseViewController {
         }.store(in: &cancellables)
         
         self.viewModel.selectedCasePublished.sink { [weak self] clientCase in
-            self?.caseButton.setTitle(clientCase?.title ?? "Выберите дело", for: .normal)
+            self?.caseButton.text = clientCase?.title ?? "Выберите дело"
         }.store(in: &cancellables)
         
         self.viewModel.present.sink { [weak self] vc in

@@ -7,8 +7,10 @@
 
 import UIKit
 
-final class AnalyticsViewController: ActionsViewController<AnalyticsViewModel> {
-    override func setupNavigationController() {
-        self.navigationItem.title = "Отчетность и аналитика"
+final class AnalyticsViewController: NewActionsViewController<AnalyticsViewModel> {
+    override func setupInterface() {
+        super.setupInterface()
+        
+        self.viewTitle = "Отчетность и аналитика"
     }
 }

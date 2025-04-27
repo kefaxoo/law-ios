@@ -5,7 +5,7 @@
 //  Created by Bahdan Piatrouski on 11.01.25.
 //
 
-import Foundation
+import UIKit
 import SwiftData
 
 @Model final class ClientDocument {
@@ -22,6 +22,17 @@ import SwiftData
                     "Договор"
                 case .attorney:
                     "Доверенность"
+            }
+        }
+        
+        var icon: UIImage {
+            switch self {
+                case .pasport:
+                    .passportIcon
+                case .contract:
+                    .contractIcon
+                case .attorney:
+                    .attorneyIcon
             }
         }
     }

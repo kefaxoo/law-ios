@@ -9,8 +9,10 @@ import UIKit
 
 final class ReceivablesClientsViewController: BaseViewController {
     private lazy var tableView = UITableView().setup {
-        $0.register(TextTableViewCell.self)
+        $0.register(ReceivableTableViewCell.self)
         $0.dataSource = self
+        $0.contentInset = .init(top: 7, left: 0, bottom: 0, right: 0)
+        $0.separatorStyle = .none
     }
     
     private let viewModel: ReceivablesClientsViewModelProtocol
@@ -25,7 +27,10 @@ final class ReceivablesClientsViewController: BaseViewController {
     }
     
     override func setupConstraints() {
-        self.tableView.snp.makeConstraints({ $0.edges.equalTo(self.view.safeAreaLayoutGuide) })
+        self.tableView.snp.makeConstraints { make in
+            make.verticalEdges.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
+        }
     }
     
     override func setupBindings() {
@@ -45,11 +50,10 @@ extension ReceivablesClientsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TextTableViewCell.id, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: ReceivableTableViewCell.id, for: indexPath)
         cell.selectionStyle = .none
         
-        let clientAndDebt = self.viewModel.clientsAndDebts[indexPath.row]
-        (cell as? TextTableViewCell)?.text = "Клиент: \(clientAndDebt.client.fullName)\nДолг: \(clientAndDebt.debt)"
+        (cell as? ReceivableTableViewCell)?.clientDebt = self.viewModel.clientsAndDebts[indexPath.row]
         
         return cell
     }

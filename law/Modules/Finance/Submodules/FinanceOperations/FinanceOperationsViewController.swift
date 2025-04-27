@@ -9,9 +9,11 @@ import UIKit
 
 final class FinanceOperationsViewController: BaseViewController {
     private lazy var tableView = UITableView().setup {
-        $0.register(FinanceOperationTableViewCell.self)
+        $0.register(FinanceOperationsTableViewCell.self)
         $0.dataSource = self
         $0.delegate = self
+        $0.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 0, right: 0)
+        $0.separatorStyle = .none
     }
     
     private let viewModel: FinanceOperationsViewModelProtocol
@@ -26,7 +28,10 @@ final class FinanceOperationsViewController: BaseViewController {
     }
     
     override func setupConstraints() {
-        self.tableView.snp.makeConstraints({ $0.edges.equalTo(self.view.safeAreaLayoutGuide) })
+        self.tableView.snp.makeConstraints { make in
+            make.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
+        }
     }
     
     override func setupBindings() {
@@ -60,8 +65,8 @@ extension FinanceOperationsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: FinanceOperationTableViewCell.id, for: indexPath)
-        (cell as? FinanceOperationTableViewCell)?.operation = self.viewModel.operations[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: FinanceOperationsTableViewCell.id, for: indexPath)
+        (cell as? FinanceOperationsTableViewCell)?.operation = self.viewModel.operations[indexPath.row]
         return cell
     }
 }

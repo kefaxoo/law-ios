@@ -10,8 +10,10 @@ import UIKit
 final class DocsManagementViewController: BaseViewController {
     private lazy var documentsTableView = UITableView().setup {
         $0.dataSource = self
-        $0.register(TextTableViewCell.self)
+        $0.register(DocumentTableViewCell.self)
         $0.delegate = self
+        $0.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 0, right: 0)
+        $0.separatorStyle = .none
     }
     
     private let viewModel: DocsManagementViewModelProtocol
@@ -49,7 +51,10 @@ final class DocsManagementViewController: BaseViewController {
     }
     
     override func setupConstraints() {
-        self.documentsTableView.snp.makeConstraints({ $0.edges.equalTo(self.view.safeAreaLayoutGuide) })
+        self.documentsTableView.snp.makeConstraints { make in
+            make.top.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
+        }
     }
 }
 
@@ -67,8 +72,8 @@ extension DocsManagementViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TextTableViewCell.id, for: indexPath)
-        (cell as? TextTableViewCell)?.text = self.viewModel.documents[indexPath.row].cellText
+        let cell = tableView.dequeueReusableCell(withIdentifier: DocumentTableViewCell.id, for: indexPath)
+        (cell as? DocumentTableViewCell)?.document = self.viewModel.documents[indexPath.row]
         return cell
     }
 }

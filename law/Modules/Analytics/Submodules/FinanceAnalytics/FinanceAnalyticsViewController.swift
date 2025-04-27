@@ -48,12 +48,13 @@ final class FinanceAnalyticsViewController: BaseViewController {
     }
     
     private lazy var tableView = UITableView().setup {
-        $0.register(TextTableViewCell.self)
+        $0.register(FinanceAnalyticsTableViewCell.self)
         $0.dataSource = self
         $0.isScrollEnabled = false
+        $0.separatorStyle = .none
     }
     
-    private lazy var generationButton = UIButton(configuration: .filled()).setup {
+    private lazy var generationButton = BaseBlueButton().setup {
         $0.setTitle("Сгенерировать отчет", for: .normal)
         $0.addTarget(self, action: #selector(generationButtonDidTap), for: .touchUpInside)
     }
@@ -78,7 +79,7 @@ final class FinanceAnalyticsViewController: BaseViewController {
         }
         
         self.tableView.snp.makeConstraints {
-            $0.top.equalTo(self.transactionTypeVStackView.snp.bottom).offset(16)
+            $0.top.equalTo(self.transactionTypeVStackView.snp.bottom).offset(22)
             $0.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide)
         }
         
@@ -125,8 +126,8 @@ extension FinanceAnalyticsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TextTableViewCell.id, for: indexPath)
-        (cell as? TextTableViewCell)?.text = self.viewModel.financeAnalytics[indexPath.row].text
+        let cell = tableView.dequeueReusableCell(withIdentifier: FinanceAnalyticsTableViewCell.id, for: indexPath)
+        (cell as? FinanceAnalyticsTableViewCell)?.financeAnaltyics = self.viewModel.financeAnalytics[indexPath.row]
         return cell
     }
 }

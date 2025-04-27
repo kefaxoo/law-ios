@@ -7,8 +7,10 @@
 
 import UIKit
 
-final class FinanceViewController: ActionsViewController<FinanceViewModel> {
-    override func setupNavigationController() {
-        self.navigationItem.title = "Финансовый учет"
+final class FinanceViewController: NewActionsViewController<FinanceViewModel> {
+    override func setupInterface() {
+        super.setupInterface()
+        
+        self.viewTitle = "Финансовый учет"
     }
 }

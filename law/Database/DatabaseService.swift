@@ -57,6 +57,17 @@ final class DatabaseService {
         }
     }
     
+    func fetchObjects<T>(type: T.Type, predicate: Predicate<T>? = nil) async -> [T] where T: PersistentModel {
+        let descriptor = FetchDescriptor<T>(predicate: predicate)
+        guard let context else { return [] }
+        
+        do {
+            return try context.fetch(descriptor)
+        } catch {
+            return []
+        }
+    }
+    
     func deleteObject<T>(_ object: T) where T: PersistentModel {
         self.context?.delete(object)
     }

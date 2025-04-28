@@ -1,22 +1,27 @@
 [
     {
       "login": "advokat_ivanov",
-      "password": "SecurePass123!"
+      "password": "SecurePass123!",
+      "role": "lawyer"
     },
     {
       "login": "legalexpert_petrov",
-      "password": "Lawyer2024#"
+      "password": "Lawyer2024#",
+      "role": "lawyer"
     },
     {
       "login": "justice_smirnova",
-      "password": "Advokat$$99"
+      "password": "Advokat$$99",
+      "role": "lawyer"
     },
     {
       "login": "beljurist_kuznetsov",
-      "password": "LegalPower77!"
+      "password": "LegalPower77!",
+      "role": "lawyer"
     },
     {
       "login": "defender_alexeeva",
-      "password": "CaseClosed2025!"
+      "password": "CaseClosed2025!",
+      "role": "lawyer"
     }
   ]

@@ -126,6 +126,7 @@ extension AddEventViewModel {
                       isHTML: false
                     )
                     
+                    FirebaseManager.shared.event(eventToShow, isNotification: true)
                     self?.presentMailVC.send(vc)
                 } else {
                     self?.present.send(UIAlertController(errorText: "Невозможно отобразить окно отправки Email письма"))
@@ -177,6 +178,7 @@ extension AddEventViewModel {
             PushNotificationService.addCalendarEvenetReminder(event, reminderPeriod: selectedReminderPeriod)
         }
         
+        FirebaseManager.shared.event(event, isNotification: false)
         NotificationCenter.default.post(name: .fetchEvents, object: nil)
         self.popVC.send(())
     }

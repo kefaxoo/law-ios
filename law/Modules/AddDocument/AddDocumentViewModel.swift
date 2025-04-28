@@ -151,9 +151,11 @@ extension AddDocumentViewModel {
             }
             
             DatabaseService.shared.saveChanges()
+            FirebaseManager.shared.createEditDocument(document, isEdit: true)
         } else {
             let document = ClientDocument(title: title, type: self.selectedType, uploadDate: Date(), filePath: filePath)
             DatabaseService.shared.saveObject(document)
+            FirebaseManager.shared.createEditDocument(document, isEdit: false)
         }
         
         NotificationCenter.default.post(name: .fetchDocuments, object: nil)

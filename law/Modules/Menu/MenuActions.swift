@@ -12,6 +12,15 @@ enum MenuActions: CaseIterable {
     case docsManagment
     case finance
     case analytics
+    case users
+    
+    static var lawyerCases: [MenuActions] {
+        Self.allCases
+    }
+    
+    static var clientCases: [MenuActions] {
+        [.docsManagment]
+    }
 }
 
 extension MenuActions: ActionsProtocol {
@@ -25,6 +34,8 @@ extension MenuActions: ActionsProtocol {
                 "Финансовые операции"
             case .analytics:
                 "Отчетность и аналитика"
+            case .users:
+                "Пользователи"
         }
     }
     
@@ -38,6 +49,8 @@ extension MenuActions: ActionsProtocol {
                 FinanceFactory.create()
             case .analytics:
                 AnalyticsFactory.create()
+            case .users:
+                UsersFactory.create()
         }
     }
 }

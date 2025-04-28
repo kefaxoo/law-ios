@@ -142,6 +142,7 @@ extension AddFinanceOperationViewModel {
         let operation = self.operation ?? FinanceOperation(clientId: selectedClient.id, caseId: selectedCase.id, amount: amount, transactionType: self.currentTransactionType, status: self.currentStatus, paymentMethod: self.currentPaymentMethod)
         if self.operation == nil {
             DatabaseService.shared.saveObject(operation)
+            FirebaseManager.shared.createEditFinanceOperation(operation, isEdit: false)
         } else {
             self.operation?.clientId = selectedClient.id
             self.operation?.caseId = selectedCase.id
@@ -151,6 +152,9 @@ extension AddFinanceOperationViewModel {
             self.operation?.paymentMethod = self.currentPaymentMethod
             
             DatabaseService.shared.saveChanges()
+            if let operation = self.operation {
+                FirebaseManager.shared.createEditFinanceOperation(operation, isEdit: true)
+            }
         }
         
         NotificationCenter.default.post(name: .fetchOperations, object: nil)

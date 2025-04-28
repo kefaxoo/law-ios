@@ -9,6 +9,7 @@ import Foundation
 
 enum UserDefaultsKey: String {
     case currentUserId
+    case currentUserRole
     case hasNotificationAccess
     case isMockDataLoaded
 }

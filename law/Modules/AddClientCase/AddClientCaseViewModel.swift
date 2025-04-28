@@ -132,9 +132,13 @@ extension AddClientCaseViewModel {
             self.clientCase?.endDate = self.endDate?.timeIntervalSince1970
             self.clientCase?.eventDates = events.isEmpty ? nil : events
             DatabaseService.shared.saveChanges()
+            if let clientCase {
+                FirebaseManager.shared.createEditCase(clientCase, isEdit: true)
+            }
         } else {
             let clientCase = ClientCase(clientId: self.client.id, type: self.selectedCaseType, status: self.selectedStatus, startDate: self.startDate, endDate: self.endDate, eventDates: events.isEmpty ? nil : events)
             DatabaseService.shared.saveObject(clientCase)
+            FirebaseManager.shared.createEditCase(clientCase, isEdit: false)
         }
         
         NotificationCenter.default.post(name: .fetchClientCasesInfo, object: nil)

@@ -37,6 +37,7 @@ extension AddClientViewModel {
         
         let client = ClientInfo(lastName: lastName, firstName: firstName, fatherName: fatherName, birthDateTimestamp: birthDateTimestamp, phoneNumber: phoneNumber, email: email, address: address, clientType: self.currentClientType)
         DatabaseService.shared.saveObject(client)
+        FirebaseManager.shared.createClient(client)
         NotificationCenter.default.post(name: .fetchClientsInfo, object: nil)
         self.popVC.send(())
     }

@@ -38,6 +38,13 @@ final class ClientTableViewCell: BaseTableViewCell {
         }
     }
     
+    var user: User? {
+        didSet {
+            self.personLabel.text = self.user?.login
+            self.clientTypeLabel.text = self.user?.role?.title
+        }
+    }
+    
     override func setupLayout() {
         self.contentView.addSubview(self.personImageView)
         self.contentView.addSubview(self.personLabel)

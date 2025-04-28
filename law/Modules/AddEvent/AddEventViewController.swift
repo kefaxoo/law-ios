@@ -259,19 +259,19 @@ final class AddEventViewController: BaseViewController {
         self.viewModel.eventToShowPublished.sink { [weak self] eventToShow in
             guard let eventToShow else { return }
             
-            self?.eventTypeButton.setTitle(eventToShow.eventType.title, for: .normal)
+            self?.eventTypeLabel.text = eventToShow.eventType.title
             self?.nameTextField.text = eventToShow.name
             self?.descriptionTextField.text = eventToShow.eventDescription ?? " "
             self?.datePickerView.date = Date(timeIntervalSince1970: eventToShow.date)
             self?.locationTextField.text = eventToShow.location ?? " "
             let clientId = eventToShow.clientId
             DatabaseService.shared.fetchObjects(type: ClientInfo.self, predicate: #Predicate { $0.id == clientId }) { objects, error in
-                self?.clientButton.setTitle(objects?.first?.fullName, for: .normal)
+                self?.clientButton.text = objects?.first?.fullName
             }
             
             let caseId = eventToShow.caseId
             DatabaseService.shared.fetchObjects(type: ClientCase.self, predicate: #Predicate { $0.id == caseId }) { objects, error in
-                self?.caseButton.setTitle(objects?.first?.title, for: .normal)
+                self?.caseButton.text = objects?.first?.title
             }
             
             self?.eventTypeButton.isEnabled = false

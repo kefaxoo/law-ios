@@ -28,10 +28,11 @@ final class AddClientViewModel: AddClientViewModelProtocol {
 // MARK: - Actions
 extension AddClientViewModel {
     func createClient(lastName: String?, firstName: String?, fatherName: String?, birthDateTimestamp: TimeInterval, phoneNumber: String?, email: String?, address: String?) {
-        guard let lastName = self.checkText(lastName, errorText: "Введите фамилию"),
-              let firstName = self.checkText(firstName, errorText: "Введите имя"),
+        guard let firstName = self.checkText(firstName, errorText: "Введите имя"),
+              let lastName = self.checkText(lastName, errorText: "Введите фамилию"),
               let phoneNumber = self.checkText(phoneNumber, errorText: "Введите номер телефона"),
               let email = self.checkText(email, errorText: "Введите email"),
+              let email = self.checkEmail(email),
               let address = self.checkText(address, errorText: "Введите адрес")
         else { return }
         
@@ -52,5 +53,18 @@ private extension AddClientViewModel {
         }
         
         return text
+    }
+    
+    func checkEmail(_ email: String?) -> String? {
+        if email == nil {
+            return nil
+        }
+        
+        guard email?.isValidEmail ?? false else {
+            self.presentAlert.send(UIAlertController(errorText: "Введите валидный Email"))
+            return nil
+        }
+        
+        return email
     }
 }

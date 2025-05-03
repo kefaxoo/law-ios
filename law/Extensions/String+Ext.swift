@@ -18,4 +18,8 @@ extension String {
         UIGraphicsEndImageContext()
         return image
     }
+    
+    var isValidEmail: Bool {
+        NSPredicate(format: "SELF MATCHES %@", "^[a-zA-Z0-9]+[@]{1}[a-zA-Z]+[.]{1}[a-zA-Z]{2,3}.?[a-zA-Z]{0,3}$").evaluate(with: self)
+    }
 }

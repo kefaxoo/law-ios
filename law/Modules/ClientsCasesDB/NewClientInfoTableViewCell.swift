@@ -37,7 +37,7 @@ final class NewClientInfoTableViewCell: BaseTableViewCell {
                 \(client.fullName)
                 День рождения: \(client.birthDateTimestamp.toDate(withFormat: "dd/MM/yyyy"))
                 Номер телефона: \(client.phoneNumber)
-                Email: \(client.address)
+                Email: \(client.email)
                 \(client.address)
                 """
         }

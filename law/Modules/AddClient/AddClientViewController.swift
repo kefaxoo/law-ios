@@ -24,6 +24,7 @@ final class AddClientViewController: BaseViewController {
         $0.placeholder = "Отчество"
         $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 32) })
         $0.delegate = self
+        $0.tag = 1003
     }
     
     private lazy var birthDatePickerView = UIDatePicker().setup {
@@ -40,6 +41,8 @@ final class AddClientViewController: BaseViewController {
     private lazy var emailTextField = UITextField.roundedRect.setup {
         $0.placeholder = "Email"
         $0.snp.makeConstraints({ $0.width.equalTo(UIScreen.main.bounds.width - 32) })
+        $0.delegate = self
+        $0.tag = 1005
     }
     
     private lazy var addressTextField = UITextField.roundedRect.setup {
@@ -129,6 +132,18 @@ private extension AddClientViewController {
 // MARK: - UITextFieldDelegate
 extension AddClientViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        (string.filter(\.isLetter) + string.filter(\.isWhitespace)).count == string.count
+        if textField.tag == 1003 {
+            return (string.filter(\.isLetter) + string.filter(\.isWhitespace)).count == string.count
+        } else if textField.tag == 1005 {
+            if let currentText = textField.text,
+               let textRange = Range(range, in: currentText) {
+                let updatedText = currentText.replacingCharacters(in: textRange, with: string)
+                return updatedText.lowercased().filter({ "qwertyuiopasdfghjklzxcvbnm@_.-".contains($0) }).count == updatedText.count
+            }
+            
+            return true
+        }
+        
+        return true
     }
 }

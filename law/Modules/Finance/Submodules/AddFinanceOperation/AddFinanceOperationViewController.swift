@@ -36,10 +36,19 @@ final class AddFinanceOperationViewController: BaseViewController {
     }
     
     private lazy var amountLabel = UILabel().setup { $0.text = "Введите сумму" }
+    private lazy var plusMinusButton = UIButton().setup {
+        $0.setImage(UIImage(systemName: "plus"), for: .selected)
+        $0.setImage(UIImage(systemName: "minus"), for: .normal)
+        $0.isSelected = true
+        $0.addTarget(self, action: #selector(plusMinusButtonDidTap), for: .touchUpInside)
+    }
+    
     private lazy var amountTextField = UITextField.roundedRect.setup {
         $0.placeholder = "Введите сумму..."
         $0.keyboardType = .decimalPad
         $0.delegate = self
+        $0.rightView = self.plusMinusButton
+        $0.rightViewMode = .always
     }
     
     private lazy var transactionTypeLabel = UILabel().setup { $0.text = "Выберите тип транзакции:" }
@@ -161,6 +170,19 @@ final class AddFinanceOperationViewController: BaseViewController {
             self?.amountTextField.text = "\(amount)"
             self?.isAdd = false
         }.store(in: &cancellables)
+        
+        self.viewModel.plusMinusPublished.sink { [weak self] isSelected in
+            self?.plusMinusButton.isSelected = isSelected
+            if self?.viewModel.operation == nil {
+                if isSelected,
+                   self?.amountTextField.text?.first == "-" {
+                    self?.amountTextField.text?.removeFirst()
+                } else if !isSelected,
+                          self?.amountTextField.text?.first != "-" {
+                    self?.amountTextField.text = "-" + (self?.amountTextField.text ?? "")
+                }
+            }
+        }.store(in: &cancellables)
     }
 }
 
@@ -171,7 +193,7 @@ extension AddFinanceOperationViewController: UITextFieldDelegate {
         let decimalSeparator = "."
         
         if string.isEmpty {
-            return true
+            return currentText == "-" ? false : true
         }
         
         let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
@@ -188,12 +210,17 @@ extension AddFinanceOperationViewController: UITextFieldDelegate {
             return false
         }
         
+        if currentText == "-",
+           string.isEmpty {
+            return false
+        }
+        
         if newText == decimalSeparator {
             textField.text = ""
             return false
         }
         
-        let regexPattern = "^(0\(decimalSeparator)?|[1-9][0-9]*)\(decimalSeparator)?[0-9]{0,2}$"
+        let regexPattern = "^-?(0\(decimalSeparator)?|[1-9][0-9]*)\(decimalSeparator)?[0-9]{0,2}$"
         let predicate = NSPredicate(format: "SELF MATCHES %@", regexPattern)
         
         return predicate.evaluate(with: newText)
@@ -219,6 +246,10 @@ private extension AddFinanceOperationViewController {
     
     @objc func addButtonDidTap(_ sender: UIButton) {
         self.viewModel.addOperation(amount: self.amountTextField.text)
+    }
+    
+    @objc func plusMinusButtonDidTap(_ sender: UIButton) {
+        self.viewModel.plusMinusButtonDidTap()
     }
 }
 

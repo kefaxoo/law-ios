@@ -72,7 +72,12 @@ final class AddFinanceOperationViewModel: AddFinanceOperationViewModelProtocol {
     var present = CPassthroughSubject<UIViewController>()
     var pop = CPassthroughSubject<Void>()
     
-    private var operation: FinanceOperation?
+    var operation: FinanceOperation?
+    
+    @Published private var plusMinus = true
+    var plusMinusPublished: CPublisher<Bool> {
+        $plusMinus.receive(on: DispatchQueue.main).eraseToAnyPublisher()
+    }
     
     @Published private var amount: Double?
     var amountPublished: CPublisher<Double?> {
@@ -98,6 +103,7 @@ final class AddFinanceOperationViewModel: AddFinanceOperationViewModelProtocol {
             }
             
             self.amount = operation.amount
+            self.plusMinus = operation.amount <= 0
         } else {
             self.currentTransactionType = .servicePayment
             self.currentStatus = .pending
@@ -132,9 +138,7 @@ extension AddFinanceOperationViewModel {
             return
         }
         
-        guard let amount = Double(amount ?? ""),
-              amount >= 0
-        else {
+        guard let amount = Double(amount ?? "") else {
             self.present.send(UIAlertController(errorText: "Введите сумму"))
             return
         }
@@ -159,6 +163,11 @@ extension AddFinanceOperationViewModel {
         
         NotificationCenter.default.post(name: .fetchOperations, object: nil)
         self.pop.send(())
+    }
+    
+    func plusMinusButtonDidTap() {
+        self.plusMinus.toggle()
+        self.amount? *= -1
     }
 }
 

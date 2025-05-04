@@ -26,7 +26,10 @@ protocol AddFinanceOperationViewModelProtocol {
     var present: CPassthroughSubject<UIViewController> { get }
     var pop: CPassthroughSubject<Void> { get }
     
+    var plusMinusPublished: CPublisher<Bool> { get }
     var amountPublished: CPublisher<Double?> { get }
+    
+    var operation: FinanceOperation? { get }
     
     func clientButtonDidTap()
     func setSelectedClient(_ client: ClientInfo)
@@ -35,4 +38,6 @@ protocol AddFinanceOperationViewModelProtocol {
     func setSelectedCase(_ case: ClientCase)
     
     func addOperation(amount: String?)
+    
+    func plusMinusButtonDidTap()
 }

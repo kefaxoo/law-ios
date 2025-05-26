@@ -31,7 +31,7 @@ extension MenuActions: ActionsProtocol {
             case .docsManagment:
                 "Документооборот"
             case .finance:
-                "Финансовые операции"
+                "Финансовый учет"
             case .analytics:
                 "Отчетность и аналитика"
             case .users:

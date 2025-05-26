@@ -8,5 +8,7 @@
 import UIKit
 
 final class LaywerAnalyticsViewController: TypeAnalyticsViewController {
-    
+    override func setupNavigationController() {
+        self.navigationController?.title = "Загруженность адвокатов"
+    }
 }
